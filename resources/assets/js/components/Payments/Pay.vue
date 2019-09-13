@@ -95,10 +95,9 @@ import { Card, createToken } from 'vue-stripe-elements-plus';
                     //console.log(data);
                     console.log(data.token)
                     axios
-                    .post('/api/planpay', data.token)
+                    .post('/api/planpay', {token: data.token, subscriptionPlanId: window.localStorage.getItem('selected_plan_id')})
                     .then(({ data }) => {
-                        // this.$router.push('/dashboard');
-                        console.log ('disco dancer')
+                        this.$router.push('/dashboard');
                     })
                     .catch(({ response }) => {
                         this.flash(response.data.message, 'error');

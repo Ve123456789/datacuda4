@@ -279,5 +279,9 @@ class User extends Authenticatable
 				return true;
 			}
 		
-	}
+    }
+    
+    public function subscriptions () {
+        return $this->hasMany (Models\UserSubscription::class, 'user_id');
+    }
 }
