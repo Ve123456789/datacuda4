@@ -1,0 +1,1 @@
+<p>Please Click on this <a href="{{ $data }}">Share Image Link</a> and go to the image</p>

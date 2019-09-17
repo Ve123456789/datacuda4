@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Datacuda</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="shortcut icon" type="image/x-icon" href="img/fav.png">
+	<!-- for develop css -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/owl.carousel.min.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- style css -->
+	<link rel="stylesheet" href="css/cory.css">
+	<link rel="stylesheet" href="css/responsive_cory.css">
+
+</head>
+<body>
+	<main class="main_tag">
+		<header class="inner_header top_header homepage_header">
+			<div class="container clearfix">
+				<div class="header_content">
+					<a href="index.html" class="logo"><img src="img/white-logo.png" alt="Logo"></a>
+					<div class="navBtn">
+						<input id="click" name="exit" type="checkbox" />
+						<label for="click"><span class="burger"></span></label>	
+					</div>
+					<nav class="header_navBar">
+						<ul class="inner_nav menu_nav_bar">
+							<li><a href="about.html">About Us</a></li>
+							<li><a href="pricing.html">Pricing</a></li>
+							<li><a href="plans.html">Press</a></li>
+							<li><a href="contact.html">Contact Us</a></li>
+							<li><a href="faq.html">FAQ</a></li>
+							<li><a href="#" id="sign_up">Sign Up</a></li>
+							<li><a href="#" id="log_in">Login</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+
+		<!-- Contact Content -->
+		<section class="plans_wrapper grey_bg">
+			<div class="container clearfix">
+				<ul class="inner_nav_Bar">
+					<li><a href="#">My Account</a></li>
+					<li><a href="#">Finance</a></li>
+					<li><a href="#" class="active_nav">Plans</a></li>
+					<li><a href="#">Subscriptions / Biling</a></li>
+				</ul>
+				<div class="plan__box_wrapper row clearfix">
+					<div class="col-lg-3 col-md-3 col-sm-6 col-12">
+						<div class="plan_price_main_box">
+							<h3>Free</h3>
+							<img src="img/plan_icon_1.png" class="plan_icon">
+							<div class="plan_time">
+								<h1>0</h1><span>/month</span>
+							</div>
+							<p>Lorem ipsum dolor sit amet. sed do eiusmod tempor incididunt ut. Labore et dolore magna aliqua.</p>
+							<a href="#" class="btn green_btn">try it now</a>
+							<div class="dis_n small_text">for 14 days</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-6 col-12">
+						<div class="plan_price_main_box special_price_box">
+							<div class="ribbon"><span id="changeText">Your Plan</span></div>
+							<h3>Pro</h3>
+							<img src="img/plan_icon_2.png" class="plan_icon">
+							<div class="plan_time">
+								<h1>14</h1><span>/month</span>
+							</div>
+							<p>Lorem ipsum dolor sit amet. sed do eiusmod tempor incididunt ut. Labore et dolore magna aliqua.</p>
+							<a href="#" class="btn default_btn">Current plan</a>
+							<div class="dis_n small_text">for 14 days</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-6 col-12">
+						<div class="plan_price_main_box">
+							<h3>Business</h3>
+							<img src="img/plan_icon_3.png" class="plan_icon">
+							<div class="plan_time">
+								<h1>49</h1><span>/month</span>
+							</div>
+							<p>Lorem ipsum dolor sit amet. sed do eiusmod tempor incididunt ut. Labore et dolore magna aliqua.</p>
+							<a href="#" class="btn green_btn">try it now</a>
+							<div class="small_text">for 14 days</div>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-sm-6 col-12">
+						<div class="plan_price_main_box">
+							<h3> Enterprise</h3>
+							<img src="img/plan_icon_4.png" class="plan_icon">
+							<div class="no_t plan_time">
+								<h1>Call</h1><span></span>
+							</div>
+							<p>Lorem ipsum dolor sit amet. sed do eiusmod tempor incididunt ut. Labore et dolore magna aliqua.</p>
+							<a href="#" class="btn green_btn">try it now</a>
+							<div class="small_text">for 14 days</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Footer -->
+		<footer class="main_footer">
+			<div class="container">
+				<div class="row clearfix">
+					<div class="col-lg-6 col-md-6">
+						<div class="logo_social">
+							<div class="f_logo"><a href="#"><img src="img/f_logo.png"></a></div>
+							<ul class="f_social_nav">
+								<li><a href="#"><i class="fa fa-facebook-f"></i></a></li>
+								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+								<li><a href="#"><i class="fa fa-youtube"></i></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="f_content">
+									<h4>company</h4>
+									<ul class="f_menu_nav">
+										<li><a href="#">About us</a></li>
+										<li><a href="#">Pricing</a></li>
+										<li><a href="#">Press</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="f_content">
+									<h4>Support</h4>
+									<ul class="f_menu_nav">
+										<li><a href="#">FAQ</a></li>
+										<li><a href="#">Contact us</a></li>
+										<li><a href="#">Privacy & Terms</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="f_last_content">
+									<a href="#" class="btn green_btn">try it now</a>
+									<div class="copy_right">© 2017  All rights  reserved</div>
+								</div>	
+							</div>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</main>
+	<!-- Login -->
+	<div class="main_model_box log_in">
+		<div class="model_box">
+			<img src="img/close.svg" class="m_close_btn">
+			<div class="row">
+				<div class="model_mob col-md-8">
+					<div class="model_cloud_business_content">
+						<h3>DataCuda Business Plan</h3>
+						<a href="#" class="btn blue_big_btn">Learn More</a>
+						<img src="img/login_icon.png" alt="" class="datacuda_img">
+						<div class="model_box_logos">
+							<ul class="logos_nav">
+								<li><img src="img/logo_1.png"></li>
+								<li><img src="img/logo_2.png"></li>
+								<li><img src="img/logo_3.png"></li>
+								<li><img src="img/logo_4.png"></li>
+								<li><img src="img/logo_5.png"></li>
+								<li><img src="img/logo_6.png"></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form_content_box">
+						<div class="form_logo"><img src="img/datacuda.png"></div>
+						<h2>Login to your account here:</h2>
+						<form class="login_form">
+							<div class="form-group">
+								<input type="email" class="form_cus form-control" id="email" placeholder="Email">
+							</div>
+							<div class="form-group">
+								<input type="password" class="form_cus form-control" id="pwd" placeholder="Password">
+							</div>
+							<div class="form-group">
+								<button class="btn big_btn">Login</button>
+							</div>
+							<div class="or">or continue with</div>
+							<div class="social_login">
+								<div class="mtb_20">
+									<a href="#" class="btn social_btn facebook"><i class="fa fa-facebook-f"></i> LOGIN with facebook</a>
+								</div>
+								<div class="mtb_20">
+									<a href="#" class="btn social_btn linkedin"><i class="fa fa-linkedin"></i> LOGIN with linkedin</a>
+								</div>
+								<div class="mtb_20">
+									<a href="#" class="forgot_pass">Forgot Password?</a>
+								</div>
+							</div>
+							<div class="dont_account">
+								<p> Don’t have an account? <a href="#">SiGN UP</a></p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Signup -->
+	<div class="main_model_box sign_up">
+		<div class="model_box">
+			<img src="img/close.svg" class="m_close_btn">
+			<div class="row">
+				<div class="model_mob col-md-8">
+					<div class="model_cloud_business_content">
+						<h3>DataCuda Business Plan</h3>
+						<a href="#" class="btn blue_big_btn">Try it free</a>
+						<img src="img/login_icon.png" alt="" class="datacuda_img">
+						<div class="model_box_logos">
+							<ul class="logos_nav">
+								<li><img src="img/logo_1.png"></li>
+								<li><img src="img/logo_2.png"></li>
+								<li><img src="img/logo_3.png"></li>
+								<li><img src="img/logo_4.png"></li>
+								<li><img src="img/logo_5.png"></li>
+								<li><img src="img/logo_6.png"></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form_content_box">
+						<div class="form_logo"><img src="img/datacuda.png"></div>
+						<h2>Create a free account</h2>
+						<form class="login_form">
+							<div class="form-group">
+								<input type="email" class="form_cus form-control" id="email" placeholder="Email">
+							</div>
+							<div class="form-group">
+								<input type="password" class="form_cus form-control" id="pwd" placeholder="Password">
+							</div>
+							<div class="form-group">
+								<button class="btn big_btn">create account</button>
+							</div>
+							<div class="or">or</div>
+							<div class="social_login">
+								<div class="mtb_20">
+									<a href="#" class="btn social_btn facebook"><i class="fa fa-facebook-f"></i> Sign Up with facebook</a>
+								</div>
+								<div class="mtb_20">
+									<a href="#" class="btn social_btn linkedin"><i class="fa fa-linkedin"></i> Sign Up with linkedin</a>
+								</div>
+								<div class="mtb_20 term_cond">
+									<p>By creating an account, you agree to our <a href="#" class="text_blue">Terms of Service and Privacy Policy.</a></p>
+								</div>
+							</div>
+							<div class="alredy_account">
+								<p>Already have an account? <a href="#" class="text_green">LOGIN</a></p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/cory.js"></script>
+</body>
+</html>
