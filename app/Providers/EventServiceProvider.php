@@ -18,7 +18,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\SubscriptionPurchased::class => [
             \App\Listeners\SubscriptionPurchasedListenerer::class
-        ]
+        ],
+        \App\Events\ResourcePurchased::class => [
+            \App\Listeners\ResourcePurchasedListener::class
+        ],
     ];
 
     /**

@@ -8,6 +8,9 @@ use Laravel\Cashier\Cashier;
 
 use App\Libs\StripeLib;
 
+use App\Purchase;
+use App\Observers\PurchaseObserver;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         //
             Schema::defaultStringLength(191); //Solved by increasing StringLength
             Cashier::useCurrency('usd', '$');
+            Purchase::observe(PurchaseObserver::class);
     }
 
     /**
