@@ -74,7 +74,7 @@ class FilesController extends Controller
             }
            
             if ($volume > memoryConverterToBytes ($plan->storage_quantity, $plan->storage_unit)) {
-                return response()->json(['status' => 400, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory', 'success' => 'failed']);
+                return response()->json(['status' => 400, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory. Please upgrade your plan.', 'success' => 'failed']);
             }
 
             $amount = $request->imgamount;
