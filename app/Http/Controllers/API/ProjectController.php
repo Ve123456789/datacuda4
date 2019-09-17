@@ -105,7 +105,7 @@ class ProjectController extends Controller{
 
 
     public function get_user_project(Request $request){
-        $UserProjects = UserProjects::where('user_id', Auth::user()->id)->where('status', 1)->orderBy($request->get('order_by'), 'DESC')->get();
+        $UserProjects = UserProjects::where('user_id', Auth::user()->id)->where('status', 1)->orderBy($request->input('order_by', 'id'), 'DESC')->get();
         $ProjectData = [];
         $project_size = 0;
        
@@ -191,7 +191,7 @@ class ProjectController extends Controller{
             'plan'  => $plan->storage_quantity,
             'plan_unit'  => $plan->storage_unit,
         ];
-        return response()->json(['status' => 201, 'message' => 'Project created successfully', 'UserProjects' => $ProjectData,'usagedata'=>$size]);
+        return response()->json(['status' => 201, 'message' => 'Project created successfully', 'UserProjects' => $ProjectData,'usagedata'=>$size, 'project_size_in_byte' => $project_size]);
     }
 
 
