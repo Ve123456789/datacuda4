@@ -22,7 +22,7 @@
 						</ul>
 					</div>
 					<div class="col-md-4 col-lg-3 col-sm-6">
-						<p class=""><i class="fa fa-database" aria-hidden="true"></i> Disk Usage : {{datausag.value}}{{datausag.type}} <br/><i class="fa fa-pie-chart" aria-hidden="true"></i> Plan : {{ usagedata.plan  }}{{ usagedata.plan_unit }}</p>
+						<p class=""><i class="fa fa-database" aria-hidden="true"></i> Disk Usage : {{datausag.value}} {{ datausag.type | uppercase }} <br/><i class="fa fa-pie-chart" aria-hidden="true"></i> Plan : {{ usagedata.plan  }} {{ usagedata.plan_unit | uppercase }}</p>
 					</div>
 					<div class="col-md-12 col-lg-7 col">
 						<ul class="project_p_ost btn_group_list_nav d-flex custom-nav">
@@ -342,6 +342,11 @@
         },
         created() {
                 this.start();
+        },
+        filters: {
+            uppercase: (v) => {
+                return v ? v.toUpperCase() : null;
+            }
         },
         mounted(){
             var winHeight = $(window).height();
