@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema; //Import Schema
 use Laravel\Cashier\Cashier;
 
+use App\Libs\StripeLib;
+
+use App\Purchase;
+use App\Observers\PurchaseObserver;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -18,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         //
             Schema::defaultStringLength(191); //Solved by increasing StringLength
             Cashier::useCurrency('usd', '$');
+            Purchase::observe(PurchaseObserver::class);
     }
 
     /**
@@ -25,8 +31,10 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
-        //
+    public function register() {
+
+        $this->app->singleton (StripeLib::class, function ($app) {
+            return new StripeLib('sk_test_zh5dQ9OgeCGRYvK0fxnKLVs200KBZm7LzN');
+        });
     }
 }

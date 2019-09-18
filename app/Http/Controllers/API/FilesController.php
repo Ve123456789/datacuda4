@@ -67,6 +67,16 @@ class FilesController extends Controller
 
         $project_id = key_encryption($request->project_id, 'd');
         if(!empty($request->file())) {
+            $plan = $request->user()->subscriptions()->latest()->first()->plan()->first();
+            $volume = (int) (new ProjectController)->get_user_project($request)->getData()->project_size_in_byte;
+            foreach ($request->file()['file'] as $key => $image) {
+                $volume += (int) (current ($image))->getSize();
+            }
+           
+            if ($volume > memoryConverterToBytes ($plan->storage_quantity, $plan->storage_unit)) {
+                return response()->json(['status' => 400, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory. Please upgrade your plan.', 'success' => 'failed']);
+            }
+
             $amount = $request->imgamount;
             $project_data = UserProjects::where('id', $project_id)->first();
             $path  = [

@@ -43,9 +43,7 @@
     <script src="{{ url('assets/external_js/owl.carousel.min.js') }}"></script>
     <script src="{{ url('assets/external_js/cory.js') }}" ></script>
 
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
     <script src="https://js.stripe.com/v3/"></script>
-
     <script src="https://wchat.freshchat.com/js/widget.js"></script>
     <script>
       window.fcWidget.init({

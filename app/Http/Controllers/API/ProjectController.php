@@ -105,8 +105,7 @@ class ProjectController extends Controller{
 
 
     public function get_user_project(Request $request){
-
-        $UserProjects = UserProjects::where('user_id', Auth::user()->id)->where('status', 1)->orderBy($request->get('order_by'), 'DESC')->get();
+        $UserProjects = UserProjects::where('user_id', Auth::user()->id)->where('status', 1)->orderBy($request->input('order_by', 'id'), 'DESC')->get();
         $ProjectData = [];
         $project_size = 0;
        
@@ -183,14 +182,16 @@ class ProjectController extends Controller{
                     'total_img'=>$total_img,
                 ];
             endif;
-        endforeach; 
+        endforeach;
+        
+        $plan = $request->user()->subscriptions()->latest()->first()->plan()->first();
 
         $size = [
             'usag' => convertToReadableSize($project_size),
-            'plan'  => 100,
-            'plan_unit'  => 'MB',
+            'plan'  => $plan->storage_quantity,
+            'plan_unit'  => $plan->storage_unit,
         ];
-        return response()->json(['status' => 201, 'message' => 'Project created successfully', 'UserProjects' => $ProjectData,'usagedata'=>$size]);
+        return response()->json(['status' => 201, 'message' => 'Project created successfully', 'UserProjects' => $ProjectData,'usagedata'=>$size, 'project_size_in_byte' => $project_size]);
     }
 
 
@@ -257,10 +258,12 @@ class ProjectController extends Controller{
                 endif;
             endforeach;
             //return response()->json($ProjectData);
+            $plan = $request->user()->subscriptions()->latest()->first()->plan()->first();
+           // dd ($plan);
              $size = [
                 'usag' => 3,
-                'plan'  => 100,
-                'plan_unit'  => 'MB',
+                'plan'  => $plan->storage_quantity,
+                'plan_unit'  => $plan->storage_unit,
              ];
             return response()->json(['status' => 201, 'message' => 'Success', 'UserProjects' => $ProjectData,'usagedata'=>$size]);
 

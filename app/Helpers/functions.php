@@ -165,4 +165,17 @@ function convertToReadableSize($size){
     $data['type']  = $suffix[$f_base];
     return $data;
    // return round(pow(1024, $base - floor($base)), 1) . $suffix[$f_base];
+
+}
+
+function memoryConverterToBytes (int $quantity, string $unit):int {
+    switch (strtoupper ($unit)) {
+        case 'TB':
+            return $quantity * 1099511627776;
+        case 'GB':
+            return $quantity * 1073741824;
+        case 'MB':
+            return $quantity * 1048576;
+    }
+
 }

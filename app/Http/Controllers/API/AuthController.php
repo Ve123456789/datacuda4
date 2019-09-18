@@ -22,9 +22,17 @@ use ZanySoft\Zip\Zip;
 use ZipArchive;
 use File;
 
+use App\Http\Requests\PaySubscriptionPlanPost;
+use App\Models\Plan;
+use App\Libs\StripeLib;
+use App\Events\SubscriptionPurchased;
+
 class AuthController extends Controller
 {
-    
+    public function __construct (StripeLib $stripe) {
+        $this->stripe = $stripe;
+    }
+
 
     /**
         function name : Countries
@@ -484,32 +492,44 @@ class AuthController extends Controller
         return auth()->user();
     }
 
-    public function planpay(Request $request)
+
+    // public function planpay(Request $request)
+    // {
+    //     // validate data coming from front end.
+    //     $data = $request->all();
+    //     // $validator = Validator::make($request->all(), [
+    //     //     'pay_plan' => 'required',
+    //     //     'card_no' => 'required',
+    //     //     'month' => 'required',
+    //     //     'year' => 'required',
+    //     //     'cvc' => 'required',
+    //     // ]);
+    //     // if ($validator->fails()) {
+    //     //     return response()->json(['error' => $validator->errors(), 'status' => '401'], 401);
+    //     // }
+    //     // $user = User::where('id', auth()->user()->id)->first();
+    //     // $stripeCardToken = $this->createStripeCardToken($request->all());
+    //     // $user->newSubscription('main', $data['pay_plan'])->create($stripeCardToken->id);
+
+
+    //     \Stripe\Stripe::setApiKey("sk_test_zh5dQ9OgeCGRYvK0fxnKLVs200KBZm7LzN");
+    //     \Stripe\Charge::create([
+    //       "amount" => 2000,
+    //       "currency" => "usd",
+    //       "source" => $data['id'], // obtained with Stripe.js
+    //       //"description" => "Charge for jenny.rosen@example.com"
+    //     ]);
+    // }
+
+    public function planpay(PaySubscriptionPlanPost $request)
     {
-        // validate data coming from front end.
-        $data = $request->all();
-        // $validator = Validator::make($request->all(), [
-        //     'pay_plan' => 'required',
-        //     'card_no' => 'required',
-        //     'month' => 'required',
-        //     'year' => 'required',
-        //     'cvc' => 'required',
-        // ]);
-        // if ($validator->fails()) {
-        //     return response()->json(['error' => $validator->errors(), 'status' => '401'], 401);
-        // }
-        // $user = User::where('id', auth()->user()->id)->first();
-        // $stripeCardToken = $this->createStripeCardToken($request->all());
-        // $user->newSubscription('main', $data['pay_plan'])->create($stripeCardToken->id);
+        $plan = Plan::findOrFail($request->subscriptionPlanId);
 
-
-        \Stripe\Stripe::setApiKey("sk_test_zh5dQ9OgeCGRYvK0fxnKLVs200KBZm7LzN");
-        \Stripe\Charge::create([
-          "amount" => 2000,
-          "currency" => "usd",
-          "source" => $data['id'], // obtained with Stripe.js
-          //"description" => "Charge for jenny.rosen@example.com"
-        ]);
+        // check if amount exists 
+        if ($plan->amount) {
+            $this->stripe->charge($plan->amount, $request->token);
+        }
+        event(new SubscriptionPurchased($plan, $request->user()));    
         return response()->json(['status' => 201, 'message' => 'User Pay successfully']);
     }
 

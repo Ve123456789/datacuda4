@@ -11,7 +11,7 @@ class Purchase extends Model
     use HasApiTokens, Notifiable;
     public $timestamps = true;
     protected $table = 'purchases';
-    protected $fillable =  ['user_id','share_id','by_amount','project_id', 'filename', 'ext', 'status','email', 'user_name'];
+    protected $fillable =  ['user_id','share_id','by_amount','project_id', 'filename', 'ext', 'status','email', 'user_name', 'admin_amount'];
 
     public function users()
     {
@@ -51,6 +51,14 @@ class Purchase extends Model
         } else if ($deleted == '1') {
             return $query->whereNull('deleted_at');
         }
+    }
+
+    public function shareImage () {
+        return $this->belongsTo (ShareImage::class, 'share_id');
+    }
+
+    public function getByAmountAttribute ($by_amount) {
+        return $by_amount - $this->admin_amount;
     }
 
 }

@@ -319,25 +319,24 @@
 		</div>
 		<div class="plan__box_wrapper clearfix" id="plan_data">
 			<div class="row clearfix">
-				<div class="col-lg-4 col-md-4 col-sm-6 col-12" v-for="payplan in payplans" >
+				<div class="col-lg-3 col-md-3 col-sm-6 col-12" v-for="plan in payplans"  v-bind:key="plan.id">
 					<div class="plan_price_main_box">
-						<h3>{{payplan.name}}</h3>
-						<img src="/assets/img/plan_icon_1.png" class="plan_icon">
+						<h3>{{ plan.name }}</h3>
+						<img v-bind:src="getImg (plan.id)" class="plan_icon">
 						<div class="plan_time">
-							<h1>{{payplan.amount/100}}</h1><span>/{{payplan.name}}</span>
+							<h1>{{ plan.amount }}</h1>
+							<span>/{{ plan.storage_quantity }} {{ plan.storage_unit }}</span>
 						</div>
-						<p>Lorem ipsum dolor sit amet. sed do eiusmod tempor incididunt ut. Labore et dolore magna aliqua.</p>
-						<a href="javascript:void(0)" class="btn default_btn" v-if="payplan.activeplan === 'Active'" aria-disabled="true">Current Plan</a>
-						<a href="javascript:void(0)" class="btn green_btn" v-on:click="planpay(payplan.id)" v-else>try it now</a>
-						<!-- @click="show_register"><a href="javascript:void(0)">Register</a></li> -->
-						<div class="dis_n small_text">for 14 days</div>
+						<p v-for="benifit in plan.benifits" v-bind:key="benifit">{{ benifit }}</p>
+						<!-- <a href="javascript:void(0)" class="btn default_btn" v-if="payplan.activeplan === 'Active'" aria-disabled="true">Current Plan</a> -->
+						<a href="javascript:void(0)" class="btn green_btn text-capitalize" v-on:click="planpay(plan.id)">try it now</a>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="finance_wrapper" id="finance_data">
 			<ul class="profile_nav">
-				<li><a href="#" class="active">PaymentS & withdrawal </a></li>
+				<li><a href="#" class="active">PaymentS & withdrawalS </a></li>
 			</ul>
 			<div class="payment_content_data table_responsive">
 				<div class="payment_data_heading">
@@ -367,7 +366,7 @@
 						
 					</tr>
 					<tr v-for="user_project in user_project_buy " v-bind:key="user_project.project_id" v-if="user_project.project_purchase.length > 0">
-						<th>{{ user_project.user_detail.username }}</th>
+						<th>{{ user_project.user_detail.username  }}</th>
 						<td>{{ user_project.project_name  }}</td>
 						<td>{{ user_project.project_purchase.length  }}</td>
 						<td  >${{ projectPrice(user_project.project_purchase)  }}</td>
@@ -519,7 +518,6 @@
         </modal>
 
 		
-								
 		
 	</div>
 	
@@ -530,7 +528,6 @@ span.error {
 }
 </style>
 <script>
-
 import Vue from "vue";
 import VeeValidate from "vee-validate";
 Vue.use(VeeValidate);
@@ -539,19 +536,17 @@ import Chart from "../Reusable/Chart";
 
 export default {
   components: {
-	//Card,
 	Pay,
 	Chart
-	},
+  },
   data() {
     let userData = JSON.parse(window.localStorage.getItem("user"));
     return {
-		
-	 	userDatapicture : userData.picture,
-      	imageLink: "/database/" +userData.email + '/'+ userData.picture,
-      	email: userData.email ? userData.email : "",
-      	password: userData.password ? userData.password : "",
-      	first_name: userData.user_profile.first_name
+	 userDatapicture : userData.picture,
+      imageLink: "/database/" +userData.email + '/'+ userData.picture,
+      email: userData.email ? userData.email : "",
+      password: userData.password ? userData.password : "",
+      first_name: userData.user_profile.first_name
         ? userData.user_profile.first_name
 		: "",
 		last_name: userData.user_profile.last_name
@@ -713,7 +708,6 @@ export default {
         });
     },
     edit_save_profile(){
-
       this.$validator.validateAll();
       if (this.errors.any()) {
         return;
@@ -899,9 +893,11 @@ export default {
 	},
 	
     getPayplan() {
-      axios.get("/api/get_payplans_detail").then(response => {
+    //   axios.get("/api/get_payplans_detail").then(response => {
+	axios.get("/api/subscription-plans").then(response => {
         //console.log(response.data.payplans);
-        this.payplans = response.data.payplans;
+		// this.payplans = response.data.payplans;
+		this.payplans = response.data;
       });
     },
     get_user_subscription() {
