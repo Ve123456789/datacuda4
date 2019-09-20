@@ -20,7 +20,7 @@ use App\ShareImage;
 use App\contact;
 use App\admin;
 use Mail;
-
+\Stripe\Stripe::setApiVersion("2019-09-09");
 class UserController extends Controller
 {
     
@@ -132,6 +132,19 @@ class UserController extends Controller
 
     public function getUserDetail(){
         $user = User::where('id', auth()->user()->id)->first();
+
+        /* ==== Stripe connect account create start here ===*/
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        $account = \Stripe\Account::retrieve($user->connect_id);
+
+        $user['live_data'] = array(
+            'charges_enabled'=>$account['charges_enabled'],
+            'payouts_enabled'=>$account['payouts_enabled'],
+            'currently_due'  =>isset($account['requirements']['currently_due']) ? count($account['requirements']['currently_due']) : 1,
+        );
+
+        //echo count($account->requirements->currently_due); die();
+
         $user['user_profile'] = $user->user_profile;
         $user['company_profile'] = $user->company_profile;
         $user['banking_profile'] = BankingProfile::where('user_id',$user->id)->first();
@@ -424,26 +437,30 @@ class UserController extends Controller
             $userAmount +=  $pvalue->by_amount;
         }
 
+        if(!empty($user->connect_id)){
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            try {
+                $transfer = \Stripe\Transfer::create([
+                    "amount"      => ($userAmount*100),
+                    "currency"    => "usd",
+                    "destination" => $user->connect_id,
+                ]);
 
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        try {
-            $transfer = \Stripe\Transfer::create([
-                "amount"      => ($userAmount*100),
-                "currency"    => "usd",
-                "destination" => $user->connect_id,
-            ]);
+                foreach ($purches as $pkey => $pvalue) {
+                    Purchase::where('id', $pvalue->id)
+                     ->update(['transfer_status' => '1','transfer_id'=>$transfer->id]);
+                }
 
-            foreach ($purches as $pkey => $pvalue) {
-                Purchase::where('id', $pvalue->id)
-                 ->update(['transfer_status' => '1','transfer_id'=>$transfer->id]);
+            }catch (\Stripe\Error\InvalidRequest $e) {
+                // You screwed up in your programming. Shouldn't happen!
+                return response()->json(['status' => 300,'message'=> 'payment failed','error'=>$e->getMessage()],401);
+            }catch (Exception $e) {
+                return response()->json(['status' => 300,'message'=> 'payment failed','error'=>$e->getMessage()],401);
             }
-
-        }catch (\Stripe\Error\InvalidRequest $e) {
-            // You screwed up in your programming. Shouldn't happen!
-            return response()->json(['status' => 300,'message'=> 'payment failed','error'=>$e->getMessage()],401);
-        }catch (Exception $e) {
-            return response()->json(['status' => 300,'message'=> 'payment failed','error'=>$e->getMessage()],401);
+        }else{
+            return response()->json(['status' => 401,'message'=> 'First you need to add banking detail' ,'user'=>$user],401);
         }
+
         
         //print_r( $transfer); die();
         return response()->json(['status' => 200,'message'=> 'Amount transfer successfully' ,'user'=>$user]);
@@ -507,6 +524,8 @@ class UserController extends Controller
             $project_purchase[$key]['purchase_details'] = Purchase::where('project_id', $project->id)->count();
 
             $project_purchase[$key]['project_purchase'] = Purchase::where('project_id', $project->id)->where('transfer_status','0')->get();
+
+            $project_purchase[$key]['project_payout'] = Purchase::where('project_id', $project->id)->where('transfer_status','1')->get();
 
             $project_purchase[$key]['project_ShareImage'] = ShareImage::where('project_id', $project->id)->where('buy_status','0')->get();
             

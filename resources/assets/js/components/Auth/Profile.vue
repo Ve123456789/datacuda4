@@ -277,6 +277,22 @@
 		<div class="banking_data clearfix" id="banking_data" style="display:none;" >
 			<div class="account_wrapper white_bg clearfix">
 				<div class="row">
+					<div class="col-md-4">
+						<span v-if="live_data.payouts_enabled" style="color:green" > Payouts Enabled </span>
+						<span v-else style="color:red" > Payouts Disabled </span>
+					</div>
+					<div class="col-md-4">
+						<span v-if="live_data.charges_enabled" style="color:green" > Charges Enabled </span>	
+						<span v-else style="color:red" > Charges Disabled </span>
+					</div>
+					<div class="col-md-4">
+						<span v-if="live_data.currently_due == 0" style="color:green" > Account Varified </span>
+						<span v-else style="color:red" > 
+							{{ live_data.currently_due[0] }}
+						</span>
+					</div>
+					<br />
+					<br />
 						<div class="col-md-12">
 							
 							<form class="account_form clearfix" id="user_detail_form" @submit.prevent="edit_save_banking">
@@ -460,7 +476,7 @@
 							<span>/{{ plan.storage_quantity }} {{ plan.storage_unit }}</span>
 						</div>
 						<p v-for="benifit in plan.benifits" v-bind:key="benifit">{{ benifit }}</p>
-						<a href="javascript:void(0)" class="btn default_btn border" v-if="plan.id === currentSubscription.id" aria-disabled="true">Current Plan</a>
+						<a href="javascript:void(0)" class="btn default_btn border" v-if="(plan !== null && currentSubscription != null) && plan.id === currentSubscription.id" aria-disabled="true">Current Plan</a>
 						<a href="javascript:void(0)" class="btn green_btn text-capitalize" v-on:click="planpay(plan.id)" v-else>try it now</a>
 					</div>
 				</div>
@@ -509,9 +525,27 @@
 						<td  ><a href="#" class="finance_btn active" v-on:click="paymentWithdraw(user_project.id)" >Withdrawal</a></td>
 						<!-- v-if="user_project.purchase_details >= 1"<td v-else ><a href="#" class="finance_btn">Withdrawal</a></td> -->
 					</tr>
+
+					<tr v-for="user_project in user_project_buy " v-bind:key="user_project.project_id" v-if="user_project.project_payout.length > 0">
+						<th>{{ user_project.user_detail.username  }}</th>
+						<td>{{ user_project.project_name  }}</td>
+						<td>{{ user_project.project_payout.length  }}</td>
+						<td  >${{ projectPrice(user_project.project_payout)  }}</td>
+						<!-- <td v-else >${{ projectPrices(user_project.project_ShareImage)  }}</td> -->
+						<td class="text-success" >Payout</td>
+						<!-- <td class="text-danger" v-else>Awaiting Payment </td> -->
+
+						<td  ><a href="#" class="finance_btn active"  >Transfer to your bank</a></td>
+						<!-- v-if="user_project.purchase_details >= 1"<td v-else ><a href="#" class="finance_btn">Withdrawal</a></td> -->
+					</tr>
 					
 					</tbody>
 				</table>
+			</div>
+			<div class="row">
+					<div class="col-md-12">
+						<flash-message class="myCustomClass"></flash-message>
+					</div>
 			</div>
 			<div class="payment_content_data">
 				<div class="payment_data_heading">
@@ -765,7 +799,8 @@ export default {
 		expariValidCheck:true,
 		cvcValidCheck:true, 
 		debitCard_valid:'',
-		currentSubscription:null
+		currentSubscription:null,
+		live_data:userData.live_data,
     };
   },
   methods: {
@@ -776,9 +811,10 @@ export default {
         .post("/api/paymentWithdraw", data)
         .then(({ response }) => {
           	console.log(response);		  
-		  	this.flash("Profile updated successfully", "success");
+		  	this.flash("Amount success fully transfered", "success");
         }).catch(({ response }) => {
-            console.log(response);
+			console.log(response);
+			this.flash(response.data.message, "error");
         });
 	},
 	getImg:(id) =>{
@@ -848,6 +884,7 @@ export default {
 			console.log("user data print",data.data.user);
 			window.localStorage.setItem("user", JSON.stringify(data.data.user));
 			let userData1 = data.data.user;
+			this.live_data = userData1.live_data;
 			this.userDatapicture =  userData1.picture;
 	        this.imageLink = "/database/" +userData1.email + '/'+ userData1.picture;
 	  		this.company_logo = "/database/" +userData1.email + '/'+ userData1.company_profile.company_logo;
