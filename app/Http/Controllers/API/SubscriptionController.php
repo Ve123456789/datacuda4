@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\Http\Controllers\Controller;
 
 use App;
 use Auth;
@@ -109,4 +110,11 @@ class SubscriptionController extends Controller
             return $stripeCardToken;
         }
     }    
+
+    public function getCurrentSubscriptionPlan (Request $request) {
+        $plan = $request->user()->subscriptions()->latest()->first();
+        $plan = $plan ? $plan->plan()->select(['id', 'name'])->first() : null;
+
+        return response()->json(['status' => 200, 'message'=> 'Subscription information found', 'data' => $plan]);
+    }
 }

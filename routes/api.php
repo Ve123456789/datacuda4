@@ -110,6 +110,7 @@ Route::middleware('auth:api')->group(function (){
     Route::post('/storage-multiple-files', 'API\FilesController@storage_multiple_file');
     Route::post('/user_download_storage', 'API\StorageController@downloadstorage');
     Route::get('/storage-search','API\StorageController@search');
+    Route::post('/current-subscription-plan', 'API\SubscriptionController@getCurrentSubscriptionPlan');
 });
 
 
