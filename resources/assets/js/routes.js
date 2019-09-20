@@ -165,6 +165,22 @@ let routes = [{
 			showModal: true
 		}
     },
+    {
+        path: '/storage',
+        component: require('./components/Storage/storage.vue'),
+        meta: {
+            middlewareAuth: true
+        }
+
+    },
+    {
+        path: '/storage/:id',
+        component: require('./components/Storage/StorageView.vue'),
+        meta: {
+            middlewareAuth: true
+        }
+
+    },
     ];
 
 const router = new VueRouter({

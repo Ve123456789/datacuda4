@@ -37,7 +37,7 @@
 								</form>
 							</li>
 							<li><a href="javascript:void(0)" @click="show" :style="{'text-transform':'none'}" >Create Project </a></li>
-							<li><a href="javascript:void(0)" @click="submit" :style="{'text-transform':'none'}" ><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload To Storage </a></li>
+							<li><router-link to="/storage" :style="{'text-transform':'none'}"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload To Storage </router-link></li>
 						</ul>
 					</div>
 				</div>
@@ -204,11 +204,13 @@
                 axios
                     .post("/api/create_project", data)
                     .then(( response ) => {
+                        console.log(response); 
                         if(response.data.status == 201 ){
                             this.flash(response.data.message, "success");
                             this.$router.push('/project/'+ response.data.project_id);
                         }else{
-                            this.flash(response.data.error.project_name[0], "error");
+                           
+                            this.flash(response.data.error[0], "error");
                         }
                         
                     })

@@ -70,7 +70,8 @@ Route::middleware('auth:api')->group(function (){
     Route::post('/single-file', 'API\UserController@uploadProfilePic');
     Route::post('/company-file-upload/{id}', 'API\UserController@company_file_upload');
     Route::post('/user_profile', 'API\UserController@user_profile');
-	Route::post('/company_profile', 'API\UserController@company_profile');
+    Route::post('/company_profile', 'API\UserController@company_profile');
+	Route::post('/banking_profile', 'API\UserController@banking_profile');
     Route::post('/paymentWithdraw','API\UserController@paymentWithdraw');
     Route::post('/create_project', 'API\ProjectController@create_project');
     Route::post('/update_project', 'API\ProjectController@update_project');
@@ -100,6 +101,15 @@ Route::middleware('auth:api')->group(function (){
     Route::get('/count_notice', 'API\NoticealertController@countNotice');
     Route::get('/notice_list', 'API\NoticealertController@getListOfNotice');
     Route::get('/de_notice', 'API\NoticealertController@delListOfNotice');
+
+    Route::post('/create_storage', 'API\StorageController@create_storage');
+    Route::get('/get_user_storage', 'API\StorageController@get_user_storage');
+    Route::post('/update_storage', 'API\StorageController@update_storage');
+    Route::post('/soft_delete_storage', 'API\StorageController@soft_delete_storage');
+    Route::post('/getstoragedata', 'API\StorageController@get_storage_data');
+    Route::post('/storage-multiple-files', 'API\FilesController@storage_multiple_file');
+    Route::post('/user_download_storage', 'API\StorageController@downloadstorage');
+    Route::get('/storage-search','API\StorageController@search');
 });
 
 
