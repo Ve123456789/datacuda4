@@ -145,6 +145,29 @@ function create_public_dir($data,$exp)
             return $dir;
         }
     endif;
+
+    if ($exp == 'us') :
+        if (!File::isDirectory(public_path('database/' . $data['email'] . '/UserStorage'))) {
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage'), 0775, true);
+        }
+        if (!File::isDirectory(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id']))) {
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id']), 0775, true);
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id'] . '/original'), 0775, true);
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id'] . '/thumb'), 0775, true);
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id'] . '/medium'), 0775, true);
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id'] . '/file'), 0775, true);
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id'] . '/images'), 0775, true);
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id'] . '/avatars'), 0775, true);
+            $dir[] = mkdir(public_path('database/' . $data['email'] . '/UserStorage/' . $data['project_path'] . $data['id'] . '/zip'), 0775, true);
+        }
+        if (!File::isDirectory(storage_path('app/UserStorage'))) {
+            $dir[] = mkdir(storage_path('app/UserStorage'), 0775, true);
+            $dir[] = mkdir(storage_path('app/UserStorage/' . $data['id']), 0775, true);
+        } else {
+            $dir[] = mkdir(storage_path('app/UserStorage/' . $data['id']), 0775, true);
+        }
+        return $dir;
+    endif;
 }
 function rand_string( $length ) {
 

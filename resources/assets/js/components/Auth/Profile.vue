@@ -1,8 +1,8 @@
 <template>
 	<div class="container clearfix pb-7">
-		
 		<ul class="inner_nav_Bar">
 			<li><a href="javascript:void(0)" class="active" id="my_account_nav"> My Account</a></li>
+			<li><a href="javascript:void(0)" id="banking"> Banking</a></li>
 			<li><a href="javascript:void(0)" id="finance_nav" >Finance</a></li>
 			<li><a href="javascript:void(0)" id="plan_nav">Plans</a></li>
 			<li><a href="javascript:void(0)" id="biling_nav">Subscriptions / Billing</a></li>
@@ -79,14 +79,6 @@
 										<input type="text" class="form-control" name="Email" v-model="email"  v-validate="'required|email'" >
 										<span class="error" v-if="errors.has('Email')">{{errors.first('Email')}}</span>
 										<span class="tool_tip">Change email</span>
-									</div>
-
-									
-									<div class="form-group col-md-6">
-										<label class="account_lable">DOB*</label>
-										<input id="datefield" placeholder="Date Of Birth" type="date" name="DOB" class=" form-control"
-                                                        v-model="dob" v-validate="'required'">
-										<span class="error" v-if="errors.has('First Name')">{{errors.first('First Name')}}</span>
 									</div>
 
 									<div class="form-group col-md-6">
@@ -207,48 +199,10 @@
 											</select>
 										</div>
 									</div>
-									<div class="col-md-6">
-										<label>Card No</label>
-										<input type="text" name = "card_no" class="form_cus form-control" id="card_no" placeholder="Card No" v-model="card_no" v-on:keyup="validateCard" maxlength="16" >
-										<div v-if="!cardValidCheck" style="color:red;" >Enter valid Card</div>
-									</div>
+									
 								</div>
 
-								<div class="row">
-									<div class="col-md-4">
-										<div class="form-group">
-											<label>Expiry Month</label>
-											<input type="text" name = "month" class="form_cus form-control" id="month" placeholder="Expiry Month" v-model="month" maxlength="2" v-on:keyup="validateMonth" v-validate="'required'"  >
-										
-									<span class="error" v-if="errors.has('Business Email')">{{errors.first('Business Email')}}</span>
-											<div v-if="!expariValidCheck" style="color:red;" >Enter valid expiry</div>
-										</div>
-									</div>
-									<div class="col-md-4">
-										<label>Year</label>
-										<input type="text" name = "year" class="form_cus form-control" id="year" placeholder="Expiry Year" v-model="year" maxlength="2" v-on:keyup="validateYear" >
-										<div v-if="!expariValidCheck" style="color:red;" >Enter valid expiry</div>
-									</div>
-									<div class="col-md-4">
-										<label>CVC</label>
-										<input type="text" name = "" class="form_cus form-control" id="cvc" placeholder="cvv" v-model="cvc" maxlength="3" v-on:keyup="validateCvc" >
-										<div v-if="!cvcValidCheck" style="color:red;" >Enter valid CVC</div>
-									</div>
-								</div>
-
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label>Upload document </label>
-											<input type="file" id=""  ref="file"  class="" v-on:change="stripeDocUpload" />
-										</div>
-									</div>
-									<div class="col-md-6">
-										<label>SSN</label>
-										<input type="text" name="SSN" class="form_cus form-control"  placeholder="SSN" v-model="ssn" v-validate="'required'" >
-										<span class="error" v-if="errors.has('SSN')">{{errors.first('SSN')}}</span>
-									</div>									
-								</div>
+								
 								
 								<!-- <div class="form-group">
 									<button type="submit" class="save_btn1 btn green_btn">Save</button>
@@ -317,6 +271,184 @@
 				</div>
 			</div>
 		</div>
+
+				
+<!-- Banking Information start here -->
+		<div class="banking_data clearfix" id="banking_data" style="display:none;" >
+			<div class="account_wrapper white_bg clearfix">
+				<div class="row">
+						<div class="col-md-12">
+							
+							<form class="account_form clearfix" id="user_detail_form" @submit.prevent="edit_save_banking">
+								
+								<div class="row">
+									<div class="form-group col-md-6">
+										<label class="account_lable">First Name *</label>
+										<input type="text" class="form-control" name="First Name" v-model="b_first_name" v-validate="'required|alpha_num'" >
+										<span class="error" v-if="errors.has('First Name')">{{errors.first('First Name')}}</span>
+									</div>
+
+									<div class="form-group col-md-6">
+											<label class="account_lable">Last Name *</label>
+										<input type="text" class="form-control" name="Last Name" v-model="b_last_name" v-validate="'required|alpha_num'" >
+										<span class="error" v-if="errors.has('Last Name')">{{errors.first('Last Name')}}</span>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label class="account_lable">Phone</label>
+										<input type="text" class="form-control" name="Phone" v-model="b_phone"  v-validate="'required'" >
+										<span class="error" v-if="errors.has('Phone')">{{errors.first('Phone')}}</span>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label class="account_lable">Email</label>
+										<input type="text" class="form-control" name="Email" v-model="b_email"  v-validate="'required|email'" >
+										<span class="error" v-if="errors.has('Email')">{{errors.first('Email')}}</span>
+										<span class="tool_tip">Change email</span>
+									</div>
+
+									
+									<div class="form-group col-md-6">
+										<label class="account_lable">DOB*</label>
+										<input id="datefield" placeholder="Date Of Birth" type="date" name="DOB" class=" form-control"
+                                                        v-model="b_dob" v-validate="'required'">
+										<span class="error" v-if="errors.has('DOB')">{{errors.first('DOB')}}</span>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label class="account_lable">Address *</label>
+										<input type="text" class="form-control" name="Address" v-model="b_address" v-validate="'required'" >
+										<span class="error" v-if="errors.has('Address')">{{errors.first('Address')}}</span>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label class="account_lable">State *</label>
+										<select class="form-control" id="exampleFormControlSelect1" name="State" v-model="b_state" v-validate="'required'"  >
+											<option value="" >Countries</option>
+											<option value="AL" >ALABAMA</option>
+											<option value="AK" >Alaska</option>
+											<option value="AR" >Arkansas</option>
+											<option value="CA" >California</option>
+											<option value="CO" >Colorado</option>
+											<option value="CT" >Connecticut</option>
+											<option value="DE" >Delaware</option>
+											<option value="FL" >Florida</option>
+											<option value="GA" >Georgia</option>
+											<option value="HI" >Hawaii</option>
+											<option value="ID" >Idaho</option>
+											<option value="IL" >Illinois</option>
+											<option value="IN" >Indiana</option>
+											<option value="IA" >Iowa</option>
+											<option value="KS" >Kansas</option>
+											<option value="KY" >Kentucky</option>
+											<option value="LA" >Louisiana</option>
+											<option value="ME" >Maine</option>
+											<option value="MD" >Maryland</option>
+											<option value="MA" >Massachusetts</option>
+											<option value="MI" >Michigan</option>
+											<option value="MN" >Minnesota</option>
+											<option value="MS" >Mississippi</option>
+											<option value="MO" >Missouri</option>
+											<option value="MT" >Montana</option>
+											<option value="NE" >Nebraska</option>
+											<option value="NV" >Nevada</option>
+											<option value="NH" >New Hampshire</option>
+											<option value="NJ" >New Jersey </option>
+											<option value="NM" >New Mexico</option>
+											<option value="NY" >New York</option>
+											<option value="NC" >North Carolina</option>
+											<option value="ND" >North Dakota</option>
+											<option value="OH" >Ohio</option>
+											<option value="OK" >Oklahoma</option>
+											<option value="OR" >Oregon</option>
+											<option value="PA" >Pennsylvania</option>
+											<option value="RI" >Rhode Island</option>
+											<option value="SC" >South Carolina</option>
+											<option value="SD" >South Dakota</option>
+											<option value="TN" >Tennessee</option>
+											<option value="TX" >Texas</option>
+											<option value="UT" >Utah</option>
+											<option value="VT" >Vermont</option>
+											<option value="VA" >Virginia</option>
+											<option value="WA" >Washington</option>
+											<option value="WV" >West Virginia</option>
+											<option value="WI" >Wisconsin</option>
+											<option value="WY" >Wyoming</option>
+										</select>
+										<span class="error" v-if="errors.has('State')">{{errors.first('State')}}</span>
+									</div>
+
+									<div class="form-group col-md-6">
+										<label class="account_lable">City *</label>
+										<input type="text" class="form-control" name="City" v-model="b_city" v-validate="'required|alpha_num'" >
+										<span class="error" v-if="errors.has('City')">{{errors.first('City')}}</span>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Zip Code </label>
+											<input type="text" class="form-control" placeholder="Zip Code" name="Zip Code" v-model="b_zip"  v-validate="'required|alpha_num'" >
+											<span class="error" v-if="errors.has('Zip Code')">{{errors.first('Zip Code')}}</span>
+										</div>
+									</div>
+
+									<div class="col-md-6">
+										<label>Card No</label>
+										<input type="text" name = "Card No" class="form_cus form-control" id="card_no" placeholder="Card No" v-model="card_no" v-on:keyup="validateCard" maxlength="16" v-validate="'required'" >
+									    <span class="error" v-if="errors.has('Card No')">{{errors.first('Card No')}}</span>
+										<span class="error" v-if="debitCard_valid" > {{ debitCard_valid }} </span> 
+										<div v-if="!cardValidCheck" style="color:red;" >Enter valid Card</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>Expiry Month</label>
+											<input type="text" name = "Expiry month" class="form_cus form-control" id="month" placeholder="Expiry Month" v-model="month" maxlength="2" v-on:keyup="validateMonth" v-validate="'required'"  >	
+									        <span class="error" v-if="errors.has('Expiry month')">{{errors.first('Expiry month')}}</span>
+											<div v-if="!expariValidCheck" style="color:red;" >Enter valid expiry</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<label>Year</label>
+										<input type="text" name = "Expiry year" class="form_cus form-control" id="year" placeholder="Expiry Year" v-model="year" maxlength="2" v-on:keyup="validateYear" v-validate="'required'" >
+									    <span class="error" v-if="errors.has('Expiry year')">{{errors.first('Expiry year')}}</span>
+										<div v-if="!expariValidCheck" style="color:red;" >Enter valid expiry</div>
+									</div>
+									<div class="col-md-4">
+										<label>CVC</label>
+										<input type="password" name = "CVV" class="form_cus form-control" id="cvc" placeholder="cvv" v-model="cvc" maxlength="3" v-on:keyup="validateCvc" v-validate="'required'" >
+									    <span class="error" v-if="errors.has('CVV')">{{errors.first('CVV')}}</span>
+										<div v-if="!cvcValidCheck" style="color:red;" >Enter valid CVC</div>
+									</div>
+
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Upload document </label>
+											<input type="file" id=""  ref="file"  class="form_cus form-control" v-on:change="stripeDocUpload" />
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label>SSN</label>
+										<input type="text" name="SSN" class="form_cus form-control"  placeholder="SSN" v-model="ssn" v-validate="'required'" >
+										<span class="error" v-if="errors.has('SSN')">{{errors.first('SSN')}}</span>
+									</div>	
+
+									<div class="col-md-12">
+										<button type="submit" class="btn green_btn">Save</button>
+									</div>
+
+								</div>								
+							</form>
+						</div>
+					</div>
+				<div class="row">
+					<div class="col-md-12">
+						<flash-message class="myCustomClass"></flash-message>
+					</div>
+				</div>
+			</div>
+		</div>
+<!-- Banking Information end here -->
+
 		<div class="plan__box_wrapper clearfix" id="plan_data">
 			<div class="row clearfix">
 				<div class="col-lg-3 col-md-3 col-sm-6 col-12" v-for="plan in payplans"  v-bind:key="plan.id">
@@ -522,6 +654,7 @@
 	</div>
 	
 </template>
+
 <style scoped>
 span.error {
   color: #9f3a38;
@@ -602,10 +735,19 @@ export default {
       	company_join_date: userData.company_profile.company_join_date
         ? userData.company_profile.company_join_date
 		: " ",
-		card_no:'',
-		month:'', 
-		year:'', 
-		cvc : '', 
+		b_first_name:userData.banking_profile && userData.banking_profile.first_name ? userData.banking_profile.first_name : "",
+		b_last_name:userData.banking_profile && userData.banking_profile.last_name ? userData.banking_profile.last_name : "",
+		b_phone:userData.banking_profile && userData.banking_profile.phone ? userData.banking_profile.phone : "",
+		b_email:userData.banking_profile && userData.banking_profile.email ? userData.banking_profile.email : "",
+		b_dob:userData.banking_profile && userData.banking_profile.dob ? userData.banking_profile.dob : "",
+		b_address:userData.banking_profile && userData.banking_profile.address ? userData.banking_profile.address : "",
+		b_state:userData.banking_profile && userData.banking_profile.state ? userData.banking_profile.state : "",
+		b_city:userData.banking_profile && userData.banking_profile.city ? userData.banking_profile.city : "",
+		b_zip:userData.banking_profile && userData.banking_profile.zip ? userData.banking_profile.zip : "",
+		card_no:userData.banking_profile && userData.banking_profile.card_no ? userData.banking_profile.card_no : "",
+		month:userData.banking_profile && userData.banking_profile.month ? userData.banking_profile.month : "", 
+		year:userData.banking_profile && userData.banking_profile.year ? userData.banking_profile.year : "",
+		cvc : userData.banking_profile && userData.banking_profile.cvc ? userData.banking_profile.cvc : "",
 		payplans: "",
 		user_subscription: "",
 		user_subscription_payplans: "",
@@ -622,6 +764,7 @@ export default {
 		cardValidCheck:true,
 		expariValidCheck:true,
 		cvcValidCheck:true, 
+		debitCard_valid:'',
 		currentSubscription:null
     };
   },
@@ -637,6 +780,9 @@ export default {
         }).catch(({ response }) => {
             console.log(response);
         });
+	},
+	getImg:(id) =>{
+		return '/assets/img/plan_icon_'+ id +'.png';
 	},
 	projectCompletedCount(){
 		this.user_project_buy.forEach(function(el){
@@ -728,7 +874,7 @@ export default {
 		email: userData.email,
         user_id: userData.id,
 		password: userData.password,
-		dob:this.dob,
+		//dob:this.dob,
 		first_name: this.first_name,
 		last_name : this.last_name,
         address: this.address,
@@ -791,31 +937,12 @@ export default {
 	  	  
       let auth_token = window.localStorage.getItem("token");
       let userData = JSON.parse(window.localStorage.getItem("user"));
-    //   let data = {
-    //     user_id: userData.id,
-    //     company_name: this.company_name,
-    //     company_address: this.company_address,
-    //     company_city: this.company_city,
-    //     company_state: this.company_state,
-    //     company_zip: this.company_zip,
-    //     company_country: this.company_country,
-	// 	   company_phone_buss: this.company_phone_buss,
-	// 	   company_mobile_buss:this.company_mobile_buss,
-    //     company_phone_fax: this.company_phone_fax,
-    //     company_business_email: this.company_business_email,
-    //     company_website: this.company_website,
-    //     company_join_date: this.company_join_date,
-	// 	   auth_token: auth_token,
-	// 	   card_no: this.card_no,
-	// 	   month: this.month,
-	// 	   year: this.year,
-	// 	   cvc: this.cvc,
-	//   };
+    
 
 	let formData = new FormData();
-	if(this.stripDocFile && this.stripDocFile.name){
-		formData.append("file", this.stripDocFile, this.stripDocFile.name);
-	}
+	// if(this.stripDocFile && this.stripDocFile.name){
+	// 	formData.append("file", this.stripDocFile, this.stripDocFile.name);
+	// }
 	formData.append("user_id", userData.id);
 	formData.append("company_name", this.company_name);
 	formData.append("company_address", this.company_address);
@@ -830,11 +957,11 @@ export default {
 	formData.append("company_website", this.company_website);
 	formData.append("company_join_date", this.company_join_date);
 	formData.append("auth_token", this.auth_token);
-	formData.append("card_no", this.card_no);
-	formData.append("month", this.month);
-	formData.append("year", this.year);
-	formData.append("cvc", this.cvc);
-	formData.append("ssn",this.ssn);
+	// formData.append("card_no", this.card_no);
+	// formData.append("month", this.month);
+	// formData.append("year", this.year);
+	// formData.append("cvc", this.cvc);
+	// formData.append("ssn",this.ssn);
 
 	
 
@@ -848,7 +975,58 @@ export default {
         .catch(({ response }) => {
           //console.log(response);
         });
-    },
+	},
+	edit_save_banking(){
+
+		this.$validator.validateAll();
+		if (this.errors.any()){
+			return;
+		}
+			
+		let auth_token = window.localStorage.getItem("token");
+		let userData = JSON.parse(window.localStorage.getItem("user"));
+				
+		let formData = new FormData();
+		if(this.stripDocFile && this.stripDocFile.name){
+			formData.append("file", this.stripDocFile, this.stripDocFile.name);
+		}
+
+		formData.append("user_id", userData.id);
+		formData.append("first_name", this.b_first_name);
+		formData.append("last_name", this.b_last_name);
+		formData.append("phone", this.b_phone);
+		formData.append("email", this.b_email);
+		formData.append("dob", this.b_dob);
+		formData.append("address", this.b_address);
+		formData.append("state", this.b_state);
+		formData.append("city", this.b_city);
+		formData.append("zip", this.b_zip);
+		formData.append("auth_token", this.auth_token);
+		formData.append("card_no", this.card_no);
+		formData.append("month", this.month);
+		formData.append("year", this.year);
+		formData.append("cvc", this.cvc);
+		formData.append("ssn",this.ssn);	
+
+      	axios
+        .post("/api/banking_profile", formData)
+        .then(({ response }) => {
+		  this.getUserData();
+		  this.debitCard_valid = '';
+		  this.flash("Banking profile updated successfully", "success");
+		  
+          //console.log(data.user);
+        })
+        .catch(({ response }) => {
+			 
+			if(response.data.code == '102'){
+				
+				this.debitCard_valid = "Only debit card accepted here";
+			}
+			
+        });
+
+	},
 	stripeDocUpload(){
 		
 		var selectedFile = event.target.files[0];
@@ -993,6 +1171,7 @@ export default {
 		$('.inner_nav_Bar li a').removeClass("active");
 		$("#finance_nav").addClass("active");
 		$("#finance_data").show();
+		$("#banking_data").hide();
         $("#plan_data").hide();
         $("#my__Account_data").hide();
 		$("#biling_data").hide();
@@ -1002,6 +1181,7 @@ export default {
 		$('.inner_nav_Bar li a').removeClass("active");
 		$("#plan_nav").addClass("active");
 		$("#finance_data").hide();
+		$("#banking_data").hide();
         $("#plan_data").show();
         $("#my__Account_data").hide();
 		$("#biling_data").hide();
@@ -1009,22 +1189,22 @@ export default {
 	}
 
 
-	 $("#finance_nav").click(function(){
+	$("#finance_nav").click(function(){
         $("#finance_data").show();
-        $("#plan_data").hide();
+		$("#plan_data").hide();
+		$("#banking_data").hide();
         $("#my__Account_data").hide();
 		$("#biling_data").hide();
 		this.chartLoaded = true;
 		
     }.bind(this));
-
-
 	
 	
     $("#my_account_nav").click(function(){
 
         $("#my__Account_data").show();
-        $("#finance_data").hide();
+		$("#finance_data").hide();
+		$("#banking_data").hide();
         $("#plan_data").hide();
 		$("#biling_data").hide();
 		this.chartLoaded = false;
@@ -1032,7 +1212,8 @@ export default {
     }.bind(this));
 
     $("#plan_nav").click(function(){
-        $("#plan_data").show();
+		$("#plan_data").show();
+		$("#banking_data").hide();
         $("#finance_data").hide();
         $("#my__Account_data").hide();
 		$("#biling_data").hide();
@@ -1041,7 +1222,18 @@ export default {
 	}.bind(this));
 	
 	$("#biling_nav").click(function(){
-        $("#biling_data").show();
+		$("#biling_data").show();
+		$("#banking_data").hide();
+        $("#finance_data").hide();
+        $("#plan_data").hide();
+		$("#my__Account_data").hide();
+		this.chartLoaded = false;
+		
+	}.bind(this));
+	
+	$("#banking").click(function(){
+        $("#banking_data").show();
+        $("#biling_data").hide();
         $("#finance_data").hide();
         $("#plan_data").hide();
 		$("#my__Account_data").hide();

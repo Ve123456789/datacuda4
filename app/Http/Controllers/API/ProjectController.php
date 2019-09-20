@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\API;
-
 use App\Purchase;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,12 +31,16 @@ class ProjectController extends Controller{
     */
     public function create_project(Request $request){
 
-        $validator = Validator::make($request->all(), [
-            'project_name' => 'required|unique:user_projects,project_name'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors(), 'status' => '401']);
+        // $validator = Validator::make($request->all(), [
+        //     'project_name' => 'required|unique:user_projects,project_name',
+        // ]);
+
+        $m = UserProjects::where("project_name",request('project_name'))->where("user_id",Auth::user()->id)->get()->count();
+
+        if ($m>0) {
+            return response()->json(['error' =>array("The project name has already been taken."),'status' => '401']);
         }
+
         //Save data into the table
         $project_path = rand_string(8);
         $data_saved = UserProjects::create([
@@ -152,6 +154,7 @@ class ProjectController extends Controller{
             endforeach;
             $test_size_data = $project_size;
             $project_size = $test_size_data + $size_data;
+
             $image_path = 'database/'.Auth::user()->email.'/'.$data->project_path.$data->id.'/';
 
             if ($media && ($media->ext == 'jpg' || $media->ext == 'png' || $media->ext == 'jpeg')):
@@ -184,12 +187,13 @@ class ProjectController extends Controller{
             endif;
         endforeach;
         
-        $plan = $request->user()->subscriptions()->latest()->first()->plan()->first();
+        $plan = $request->user()->subscriptions()->latest()->first();
+        $plan = $plan ? $plan->plan()->first() : null;
 
         $size = [
             'usag' => convertToReadableSize($project_size),
-            'plan'  => $plan->storage_quantity,
-            'plan_unit'  => $plan->storage_unit,
+            'plan'  => $plan ? $plan->storage_quantity : null,
+            'plan_unit'  => $plan ? $plan->storage_unit : null,
         ];
         return response()->json(['status' => 201, 'message' => 'Project created successfully', 'UserProjects' => $ProjectData,'usagedata'=>$size, 'project_size_in_byte' => $project_size]);
     }

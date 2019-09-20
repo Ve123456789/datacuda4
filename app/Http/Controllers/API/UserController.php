@@ -10,7 +10,9 @@ use Auth;
 use Hash;
 use DB;
 use App\CompanyProfile;
+use App\BankingProfile;
 use App\Models\Payplan;
+use App\Models\Plan;
 use App\Purchase;
 use App\Quotation;
 use Validator;
@@ -132,6 +134,7 @@ class UserController extends Controller
         $user = User::where('id', auth()->user()->id)->first();
         $user['user_profile'] = $user->user_profile;
         $user['company_profile'] = $user->company_profile;
+        $user['banking_profile'] = BankingProfile::where('user_id',$user->id)->first();
         return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'User profile updated','user'=>$user]);
     }
 
@@ -171,7 +174,8 @@ class UserController extends Controller
 
     public function getplandetails(Request $request)
     {
-        $data   =Payplan::where('id',$request->id)->get()->first();
+        $data   =Plan::where('id',$request->id)->get()->first();
+        // $data   =Payplan::where('id',$request->id)->get()->first();
         if($data):
             return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'Success','data'=>$data]);
         else:
@@ -236,16 +240,35 @@ class UserController extends Controller
 
         $data = '';
         $user_present = CompanyProfile::where('user_id',$request->user_id)->first();
-        $userData     = User::where('id',$request->user_id)->first();
-        $user_profile = UserProfile::where('user_id',$request->user_id)->first();
+      
 
-        //user first name and last name retrive 
-        $nameData   = explode(" ",$userData->username);
-        $fname      = $nameData[0];
-        $lname      = $nameData[1];
+        if($user_present){
+            $data = $user_present->update($request->all());
+        } else{
+            $data = CompanyProfile::create($request->all());
+        }
+
+        $user = User::where('id', auth()->user()->id)->first();
+        $user['user_profile']       = $user->user_profile;
+        $user['company_profile']    = $user->company_profile;
+        
+        return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'Company profile updated' ,'user'=>$user]);
+        //return response()->json(['status' => 200,'message'=> $data]);
+    }
+
+    /***
+    * Stripe connect account create API start here.
+    */
+
+    public function banking_profile(Request $request){
+
+        $data = '';
+        $banking_profile = BankingProfile::where('user_id',$request->user_id)->first();
+        $userData        = User::where('id',$request->user_id)->first();
+
 
         //User dob explode. 
-        $dob = explode("-",$user_profile->dob);
+        $dob = explode("-",$request->dob);
 
         /* ==== Stripe connect account create start here ===*/
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -259,7 +282,7 @@ class UserController extends Controller
             $connect = \Stripe\Account::create([
                 "type"    => "custom",
                 "country" => "US",
-                "email"   => $userData->user_email,
+                "email"   => $request->email,
                 "business_type" => "individual",
                 "requested_capabilities" => ["card_payments", "transfers"],
             ]);
@@ -282,21 +305,21 @@ class UserController extends Controller
 
             $stripe_user_data = [
                 'individual' => [
-                    'first_name' => $fname,
-                    'last_name'  => $lname,
+                    'first_name' => $request->first_name,
+                    'last_name'  => $request->last_name,
                     'dob'   =>[
                             'day'=>$dob[2],
                             'month'=>$dob[1],
                             'year' => $dob[0],
                         ],
-                    'phone'=>$request->company_phone_buss,
-                    'email'=>$userData->email,
+                    'phone'=>$request->phone,
+                    'email'=>$request->email,
                     'address'=>[
-                            'postal_code'   =>$request->company_zip,
-                            'line1'         =>$request->company_address,
+                            'postal_code'   =>$request->zip,
+                            'line1'         =>$request->address,
                             //'line2'         =>'8 Prospect st',
-                            'city'          =>$request->company_city,
-                            'state'         =>$request->company_state,
+                            'city'          =>$request->city,
+                            'state'         =>$request->state,
                             'country'       =>'US'
                         ],
                     'ssn_last_4'=>$request->ssn,
@@ -356,44 +379,75 @@ class UserController extends Controller
               ]
             ]);
 
-            $account1 = $account->external_accounts->create(["external_account" => $tokenData->id,'default_for_currency'=>true]);
-            $account = \Stripe\Account::retrieve($payment_account_id);
-            print_r($account->external_accounts->data);
-            if (count($account->external_accounts->data) > 1) {
-                $extaccount_id = $account->external_accounts->data[1]->id;
-                $account->external_accounts->retrieve($extaccount_id)->delete();
+            if($tokenData->card->funding =='debit'){
+
+                $account1 = $account->external_accounts->create(["external_account" => $tokenData->id,'default_for_currency'=>true]);
+                $account = \Stripe\Account::retrieve($payment_account_id);
+                //print_r($account->external_accounts->data);
+                if (count($account->external_accounts->data) > 1) {
+                    $extaccount_id = $account->external_accounts->data[1]->id;
+                    $account->external_accounts->retrieve($extaccount_id)->delete();
+                }
+                
+            }else{
+                return response()->json(['message'=>"Only Debit card accepted",'code'=>'102'], 401);
             }
+            
         }
         
 
         /* ====// Stripe connect account create end here. ====*/
 
-        if($user_present){
-            $data = $user_present->update($request->all());
+        if($banking_profile){
+            $data = $banking_profile->update($request->all());
         } else{
-            $data = CompanyProfile::create($request->all());
+            $data = BankingProfile::create($request->all());
         }
 
         $user = User::where('id', auth()->user()->id)->first();
         $user['user_profile']       = $user->user_profile;
         $user['company_profile']    = $user->company_profile;
         
-        return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'Company profile updated'.$fname ,'user'=>$user]);
+        return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'Company profile updated' ,'user'=>$user]);
         //return response()->json(['status' => 200,'message'=> $data]);
     }
-
+    /**======= stripe connect account create API end here  ========*/ 
 
     public function paymentWithdraw(Request $request){
 
         $user   = User::where('id', auth()->user()->id)->first();
-        $amount = 100;
+        $purches = Purchase::where('project_id', $request->project_id)->where('transfer_status','0')->get();
+        
+
+        $userAmount  = 0;
+        foreach ($purches as $pkey => $pvalue) {
+            $userAmount +=  $pvalue->by_amount;
+        }
+
+
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        $transfer = \Stripe\Transfer::create([
-            "amount"      => ($amount*100),
-            "currency"    => "usd",
-            "destination" => $user->connect_id,
-        ]);
-        print_r( $transfer); die();
+        try {
+            $transfer = \Stripe\Transfer::create([
+                "amount"      => ($userAmount*100),
+                "currency"    => "usd",
+                "destination" => $user->connect_id,
+            ]);
+
+            foreach ($purches as $pkey => $pvalue) {
+                Purchase::where('id', $pvalue->id)
+                 ->update(['transfer_status' => '1','transfer_id'=>$transfer->id]);
+            }
+
+        }catch (\Stripe\Error\InvalidRequest $e) {
+            // You screwed up in your programming. Shouldn't happen!
+            return response()->json(['status' => 300,'message'=> 'payment failed','error'=>$e->getMessage()],401);
+        }catch (Exception $e) {
+            return response()->json(['status' => 300,'message'=> 'payment failed','error'=>$e->getMessage()],401);
+        }
+        
+        //print_r( $transfer); die();
+        return response()->json(['status' => 200,'message'=> 'Amount transfer successfully' ,'user'=>$user]);
+        
         
     }
 
@@ -452,13 +506,15 @@ class UserController extends Controller
             // $project_purchase[$key]['purchase_details'] = $project->purchase()->count();
             $project_purchase[$key]['purchase_details'] = Purchase::where('project_id', $project->id)->count();
 
-            $project_purchase[$key]['project_purchase'] = Purchase::where('project_id', $project->id)->get();
+            $project_purchase[$key]['project_purchase'] = Purchase::where('project_id', $project->id)->where('transfer_status','0')->get();
 
             $project_purchase[$key]['project_ShareImage'] = ShareImage::where('project_id', $project->id)->where('buy_status','0')->get();
             
         }
         return response()->json(['status' => 200,'message'=> 'Success','user_project_data'=> $project_purchase]);
     }
+
+
 
     public function getUserProjectBuyDetailsForClient(){
         $project_purchase = Purchase::where('user_id',Auth::user()->id)->get();

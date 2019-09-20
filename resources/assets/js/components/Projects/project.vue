@@ -56,7 +56,7 @@
 
                     </div>
                 </div>
-                <!-- <flash-message class="myCustomClass"></flash-message> -->
+                <flash-message class="myCustomClass"></flash-message>
             </div>
         </section>
         <section class="project_post_wrapper grey_bg detailPage">
@@ -975,7 +975,7 @@
                 this.data.append('img_360',this.img_360);
                 axios.post('/api/project-multiple-files', this.data, config)
                     .then(function (response) {
-
+                        console.log(response);
                         if (response.data.success) {
                             this.flash('Files uploaded!', 'success');
                             this.resetData();
@@ -984,14 +984,11 @@
                             //window.Event.fire('reload_files'); // Tell AttachmentList component to refresh its list
                         } else {
                             this.loading = 0;
-
-                            this.flash('Something went wrong', 'error');
+                            this.flash(response.data.message, 'error');
                         }
-                    }.bind(
-                        this
-                    )) // Make sure we bind Vue Component object to this funtion so we get a handle of it in order to call its other methods
+                    }.bind( this)) // Make sure we bind Vue Component object to this funtion so we get a handle of it in order to call its other methods
                     .catch(function (error) {
-                        //  console.log(error);
+                        console.log(error);
                         this.loading = 0;
                     });
             },

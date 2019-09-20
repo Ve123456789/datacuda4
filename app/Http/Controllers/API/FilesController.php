@@ -9,6 +9,7 @@ use App\User;
 use App\UserProfile;
 use App\UserProjects;
 use App\UserFiles;
+use App\UserStorage;
 
 use Storage;
 use Auth;
@@ -67,14 +68,15 @@ class FilesController extends Controller
 
         $project_id = key_encryption($request->project_id, 'd');
         if(!empty($request->file())) {
-            $plan = $request->user()->subscriptions()->latest()->first()->plan()->first();
+            $plan = $request->user()->subscriptions()->latest()->first();
+            $plan = $plan? $plan->plan()->first(): null;
             $volume = (int) (new ProjectController)->get_user_project($request)->getData()->project_size_in_byte;
             foreach ($request->file()['file'] as $key => $image) {
                 $volume += (int) (current ($image))->getSize();
             }
            
-            if ($volume > memoryConverterToBytes ($plan->storage_quantity, $plan->storage_unit)) {
-                return response()->json(['status' => 400, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory. Please upgrade your plan.', 'success' => 'failed']);
+            if ($volume > memoryConverterToBytes ($plan ? $plan->storage_quantity : 0, $plan ? $plan->storage_unit : "mb")) {
+                return response()->json(['code' => 102, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory. Please upgrade your plan.', 'error' => 'failed']);
             }
 
             $amount = $request->imgamount;
@@ -99,6 +101,43 @@ class FilesController extends Controller
         }
         return response()->json(['status' => 200, 'token' => request('auth_token'), 'message' => 'project file uploaded', 'success' => 'success']);
     }
+
+
+    public function storage_multiple_file(Request $request)
+    {   
+        if($request->img_360){
+            $img_360 = '1';
+        }else{
+            $img_360 = '0';
+            
+        }
+
+        $storage_id = key_encryption($request->storage_id, 'd');
+        if(!empty($request->file())) {
+            $amount = $request->imgamount;
+            $storage_data = UserStorage::where('id', $storage_id)->first();
+            $path  = [
+                'id'         =>  $storage_id,
+                'email'      =>  Auth::user()->email,
+                'project_path' =>  'UserStorage/'.$storage_data->storage_path.$storage_data->id,
+                'storagepath'  => 'UserStorage/',
+            ];
+            foreach ($request->file()['file'] as $key => $image) {
+                if (in_array($image[0]->getClientOriginalExtension(), array('jpg', 'png', 'jpeg', 'gif'))) {
+                    $id = helperSaveImage($image[0], $path, $amount,$img_360);
+                }elseif (in_array($image[0]->getClientOriginalExtension(), array('MP4', 'AVI', 'FLV', 'WMV', 'MOV', 'MP4', '3GP', 'Quicktime', 'HDV', 'ts', 'MPEG', 'WAV', 'LXF',
+                    'avi', 'flv', 'wmv', 'mov', 'mp4', '3gp', 'quicktime', 'hdv', 'ts', 'mpeg', 'wav', 'lxf', 'mp4'))) {
+                    $id = processVideo($image[0], $path, $amount);
+                }else {
+                    $id = helperSaveFile($image[0], $path, $amount);
+                }
+                UserStorage::find($storage_id)->medias()->attach($id);
+            }
+        }
+        return response()->json(['status' => 200, 'token' => request('auth_token'), 'message' => 'Storage file uploaded', 'success' => 'success']);
+    }
+
+    
 
     public function store(Request $request)
     {
