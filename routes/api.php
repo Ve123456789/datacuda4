@@ -71,6 +71,7 @@ Route::middleware('auth:api')->group(function (){
     Route::post('/company-file-upload/{id}', 'API\UserController@company_file_upload');
     Route::post('/user_profile', 'API\UserController@user_profile');
 	Route::post('/company_profile', 'API\UserController@company_profile');
+    Route::post('/paymentWithdraw','API\UserController@paymentWithdraw');
     Route::post('/create_project', 'API\ProjectController@create_project');
     Route::post('/update_project', 'API\ProjectController@update_project');
     Route::get('/get_user_files', 'API\UserController@getuserfiles');

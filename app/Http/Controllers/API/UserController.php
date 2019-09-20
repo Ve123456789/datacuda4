@@ -18,7 +18,6 @@ use App\ShareImage;
 use App\contact;
 use App\admin;
 use Mail;
-use App\Models\Plan;
 
 class UserController extends Controller
 {
@@ -172,8 +171,7 @@ class UserController extends Controller
 
     public function getplandetails(Request $request)
     {
-        $data   =Plan::where('id',$request->id)->get()->first();
-        // $data   =Payplan::where('id',$request->id)->get()->first();
+        $data   =Payplan::where('id',$request->id)->get()->first();
         if($data):
             return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'Success','data'=>$data]);
         else:
@@ -185,6 +183,7 @@ class UserController extends Controller
     }
 
     public function user_profile(Request $request){
+
         // validate data coming from front end.
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
@@ -197,8 +196,10 @@ class UserController extends Controller
         $user_present = UserProfile::whereUserId(request('user_id'))->first();
  
         if($user_present){
+            
             $user_present->update([
                 'user_id' => request('user_id'),
+                'dob'     => request('dob'),
                 'full_name' => request('first_name')." ".request('last_name'),
                 'first_name'=>request('first_name'),
                 'last_name'=>request('last_name'),
@@ -208,8 +209,10 @@ class UserController extends Controller
             ]);
 
         } else {
+
             UserProfile::create([
                 'user_id' => request('user_id'),
+                'dob'     => request('dob'),
                 'full_name' => request('first_name').request('last_name'),
                 'first_name'=>request('first_name'),
                 'last_name'=>request('last_name'),
@@ -224,51 +227,146 @@ class UserController extends Controller
         return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'User profile updated'/*,'user'=>$user*/]);
     }
 
+    /***
+    * Table   : company_profile.
+    * Working : Updating company profile.
+    */
+
     public function company_profile(Request $request){
 
         $data = '';
         $user_present = CompanyProfile::where('user_id',$request->user_id)->first();
         $userData     = User::where('id',$request->user_id)->first();
+        $user_profile = UserProfile::where('user_id',$request->user_id)->first();
 
         //user first name and last name retrive 
         $nameData   = explode(" ",$userData->username);
         $fname      = $nameData[0];
         $lname      = $nameData[1];
 
-        //Stripe connect account create start here.
+        //User dob explode. 
+        $dob = explode("-",$user_profile->dob);
+
+        /* ==== Stripe connect account create start here ===*/
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-        $charge = \Stripe\Account::create([
-            "type"    => "custom",
-            "country" => "US",
-            "email"   => $userData->user_email,
-        ]);
 
-        $payment_account_id  = $charge->id;
+
+       if (empty($userData->connect_id)) {
+           /**
+            * Created Stripe connect account.
+            * Updated user table.
+            */
+            $connect = \Stripe\Account::create([
+                "type"    => "custom",
+                "country" => "US",
+                "email"   => $userData->user_email,
+                "business_type" => "individual",
+                "requested_capabilities" => ["card_payments", "transfers"],
+            ]);
+
+            $userData->update([
+                'connect_id' => $connect->id,
+            ]);
+            $payment_account_id  = $connect->id;
+
+       }else{
+            $payment_account_id  = $userData->connect_id;
+       }
         
+
         $account = \Stripe\Account::retrieve($payment_account_id);
-        $account->legal_entity['first_name']             = $fname;
-        $account->legal_entity['last_name']              = $lname;
-        $account->legal_entity['dob']['day']             = "01";
-        $account->legal_entity['dob']['month']           = "03";
-        $account->legal_entity['dob']['year']            = "1990";
-        $account->legal_entity['type']                   = 'individual'; //Either “individual” or “company”
-        $account->legal_entity['address']['city']        = "Topsfield";
-        $account->legal_entity['address']['country']     = 'US';
-        $account->legal_entity['address']['line1']       = "8 Prospect st";
-        //$account->legal_entity['address']['line2']       = $address;
-        $account->legal_entity['address']['postal_code'] = "01983";
-        $account->legal_entity['address']['state']       = "MA";
-        //$account->legal_entity['ssn_last_4']             = $ssn;
-        $account->legal_entity['personal_id_number']     = "000000000";
-        $account->tos_acceptance->date                   = time(); //floor(time()/1000)
-        $account->tos_acceptance->ip                     = $_SERVER['REMOTE_ADDR'];
-        //$account->legal_entity->verification->document   = $stripeUpload->id;
-        $StripeAcountUpdate = $account->save();
-        //$account1 = $account->external_accounts->create(["external_account" => $token_id]);
 
-        //Stripe connect account create end here.
+  
+        //chacking unvarifidy account
+        if(count($account->requirements->currently_due) > 0){
 
+            $stripe_user_data = [
+                'individual' => [
+                    'first_name' => $fname,
+                    'last_name'  => $lname,
+                    'dob'   =>[
+                            'day'=>$dob[2],
+                            'month'=>$dob[1],
+                            'year' => $dob[0],
+                        ],
+                    'phone'=>$request->company_phone_buss,
+                    'email'=>$userData->email,
+                    'address'=>[
+                            'postal_code'   =>$request->company_zip,
+                            'line1'         =>$request->company_address,
+                            //'line2'         =>'8 Prospect st',
+                            'city'          =>$request->company_city,
+                            'state'         =>$request->company_state,
+                            'country'       =>'US'
+                        ],
+                    'ssn_last_4'=>$request->ssn,
+                    // 'verification'=>[
+                    //         'document'=>[
+                    //                 'front'=>$stripeUpload->id,
+                    //                 'back'=>'file_5dtoJkOhAxrMWb',
+                    //             ]
+                    //     ],
+                ],
+                'tos_acceptance'=>[
+                    'date'=>time(),
+                    'ip'  =>$_SERVER['REMOTE_ADDR'],
+                ],
+                'business_profile'=>[
+                    'url'=>'http://datacuda.com',
+                    'mcc'=>8299
+                ],
+            ];
+            
+          
 
+            $file            = $request->file('file');
+            $profile_photo  = time() . '_' . $file->getClientOriginalName();
+            $destinationPath = public_path('/stripedoc');
+            $file->move($destinationPath,$profile_photo);
+            
+            $stripeUpload  = \Stripe\FileUpload::create(
+              [
+                "purpose" => "identity_document",
+                "file" => fopen($destinationPath.'/'.$profile_photo, 'r')
+              ],
+              ["stripe_account" => $payment_account_id]
+            );
+
+            $stripe_user_data['individual']['verification']['document']['front'] = $stripeUpload->id;
+            /**
+            * Updating stripe connect account
+            */
+            \Stripe\Account::update($payment_account_id,$stripe_user_data);
+        }
+        
+
+        /**
+        * Create stripe token.
+        * Retrive stripe connect account and adding card on stripe account.
+        */
+        if(!empty($request->card_no) && !empty($request->month) && !empty($request->year) && !empty($request->cvc)){
+
+            $tokenData = \Stripe\Token::create([
+              'card' => [
+                'currency'=>'USD',
+                'number' => $request->card_no,
+                'exp_month' => $request->month,
+                'exp_year' => $request->year,
+                'cvc' => $request->cvc
+              ]
+            ]);
+
+            $account1 = $account->external_accounts->create(["external_account" => $tokenData->id,'default_for_currency'=>true]);
+            $account = \Stripe\Account::retrieve($payment_account_id);
+            print_r($account->external_accounts->data);
+            if (count($account->external_accounts->data) > 1) {
+                $extaccount_id = $account->external_accounts->data[1]->id;
+                $account->external_accounts->retrieve($extaccount_id)->delete();
+            }
+        }
+        
+
+        /* ====// Stripe connect account create end here. ====*/
 
         if($user_present){
             $data = $user_present->update($request->all());
@@ -277,13 +375,27 @@ class UserController extends Controller
         }
 
         $user = User::where('id', auth()->user()->id)->first();
-        $user['user_profile'] = $user->user_profile;
-        $user['company_profile'] = $user->company_profile;
-        return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'Company profile updated','user'=>$user]);
+        $user['user_profile']       = $user->user_profile;
+        $user['company_profile']    = $user->company_profile;
+        
+        return response()->json(['status' => 200,'token' => request('auth_token'),'message'=> 'Company profile updated'.$fname ,'user'=>$user]);
         //return response()->json(['status' => 200,'message'=> $data]);
     }
 
 
+    public function paymentWithdraw(Request $request){
+
+        $user   = User::where('id', auth()->user()->id)->first();
+        $amount = 100;
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        $transfer = \Stripe\Transfer::create([
+            "amount"      => ($amount*100),
+            "currency"    => "usd",
+            "destination" => $user->connect_id,
+        ]);
+        print_r( $transfer); die();
+        
+    }
 
     public function store(Request $request){
         // validate data coming from front end.

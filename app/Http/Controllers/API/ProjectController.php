@@ -259,7 +259,7 @@ class ProjectController extends Controller{
             endforeach;
             //return response()->json($ProjectData);
             $plan = $request->user()->subscriptions()->latest()->first()->plan()->first();
-            dd ($plan);
+           // dd ($plan);
              $size = [
                 'usag' => 3,
                 'plan'  => $plan->storage_quantity,

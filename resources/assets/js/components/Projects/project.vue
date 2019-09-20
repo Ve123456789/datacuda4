@@ -288,8 +288,7 @@
                                                 </div>
                                                 <div class="form-group col-md-6" v-if="invoice_display" >
                                                     <input type="text" name="Invoice No" placeholder="Invoice no."
-                                                        class="form-control" v-model="invoice_no"
-                                                        v-validate="'required'">
+                                                        class="form-control" v-model="invoice_no" v-validate="'required'">
                                                     <span class="error"
                                                         v-if="errors.has('Invoice No')">{{errors.first('Invoice No')}}</span>
                                                 </div>

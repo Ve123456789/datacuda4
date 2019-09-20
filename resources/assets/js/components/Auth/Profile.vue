@@ -62,36 +62,45 @@
 							<form class="account_form clearfix" id="user_detail_form" @submit.prevent="edit_save_profile">
 								
 								<div class="row">
+									<div class="form-group col-md-6">
+										<label class="account_lable">First Name *</label>
+										<input type="text" class="form-control" name="First Name" v-model="first_name" v-validate="'required|alpha_num'" pla>
+										<span class="error" v-if="errors.has('First Name')">{{errors.first('First Name')}}</span>
+									</div>
 
-										<div class="form-group col-md-6">
-											<label class="account_lable">First Name *</label>
-											<input type="text" class="form-control" name="First Name" v-model="first_name" v-validate="'required|alpha_num'" pla>
-											<span class="error" v-if="errors.has('First Name')">{{errors.first('First Name')}}</span>
-										</div>
+									<div class="form-group col-md-6">
+											<label class="account_lable">Last Name *</label>
+										<input type="text" class="form-control" name="Last Name" v-model="last_name" v-validate="'required|alpha_num'" pla>
+										<span class="error" v-if="errors.has('Last Name')">{{errors.first('Last Name')}}</span>
+									</div>
 
-										<div class="form-group col-md-6">
-												<label class="account_lable">Last Name *</label>
-											<input type="text" class="form-control" name="Last Name" v-model="last_name" v-validate="'required|alpha_num'" pla>
-											<span class="error" v-if="errors.has('Last Name')">{{errors.first('Last Name')}}</span>
-										</div>
+									<div class="form-group col-md-12">
+										<label class="account_lable">Email</label>
+										<input type="text" class="form-control" name="Email" v-model="email"  v-validate="'required|email'" >
+										<span class="error" v-if="errors.has('Email')">{{errors.first('Email')}}</span>
+										<span class="tool_tip">Change email</span>
+									</div>
 
-										<div class="form-group col-md-12">
-											<label class="account_lable">Email</label>
-											<input type="text" class="form-control" name="Email" v-model="email"  v-validate="'required|email'" >
-											<span class="error" v-if="errors.has('Email')">{{errors.first('Email')}}</span>
-											<span class="tool_tip">Change email</span>
-										</div>
-										<div class="form-group col-md-12">
-											<label class="account_lable">Password</label>
-											<input type="Password" class="form-control" v-model="password"  data-vv-name="newPassword" v-validate="'required'" >
-											<span class="error" v-if="errors.has('Password')">{{errors.first('Password')}}</span>
-											<span class="tool_tip">Change password</span>
-										</div>
-										<div class="col-md-12">
-											<button type="submit" class="btn green_btn">Save</button>
-										</div>
+									
+									<div class="form-group col-md-6">
+										<label class="account_lable">DOB*</label>
+										<input id="datefield" placeholder="Date Of Birth" type="date" name="DOB" class=" form-control"
+                                                        v-model="dob" v-validate="'required'">
+										<span class="error" v-if="errors.has('First Name')">{{errors.first('First Name')}}</span>
+									</div>
 
-									</div>								
+									<div class="form-group col-md-6">
+										<label class="account_lable">Password</label>
+										<input type="Password" class="form-control" v-model="password"  data-vv-name="newPassword" v-validate="'required'" >
+										<span class="error" v-if="errors.has('Password')">{{errors.first('Password')}}</span>
+										<span class="tool_tip">Change password</span>
+									</div>
+
+									<div class="col-md-12">
+										<button type="submit" class="btn green_btn">Save</button>
+									</div>
+
+								</div>								
 							</form>
 						</div>
 					</div>
@@ -198,11 +207,49 @@
 											</select>
 										</div>
 									</div>
-									<!-- <div class="col-md-6">
-										<label>Date format</label>
-										<input type="text" class="form-control datepicker-here" placeholder="MM/DD/YYYY" data-language='en' v-model="company_join_date" />
-									</div> -->
+									<div class="col-md-6">
+										<label>Card No</label>
+										<input type="text" name = "card_no" class="form_cus form-control" id="card_no" placeholder="Card No" v-model="card_no" v-on:keyup="validateCard" maxlength="16" >
+										<div v-if="!cardValidCheck" style="color:red;" >Enter valid Card</div>
+									</div>
 								</div>
+
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>Expiry Month</label>
+											<input type="text" name = "month" class="form_cus form-control" id="month" placeholder="Expiry Month" v-model="month" maxlength="2" v-on:keyup="validateMonth" v-validate="'required'"  >
+										
+									<span class="error" v-if="errors.has('Business Email')">{{errors.first('Business Email')}}</span>
+											<div v-if="!expariValidCheck" style="color:red;" >Enter valid expiry</div>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<label>Year</label>
+										<input type="text" name = "year" class="form_cus form-control" id="year" placeholder="Expiry Year" v-model="year" maxlength="2" v-on:keyup="validateYear" >
+										<div v-if="!expariValidCheck" style="color:red;" >Enter valid expiry</div>
+									</div>
+									<div class="col-md-4">
+										<label>CVC</label>
+										<input type="text" name = "" class="form_cus form-control" id="cvc" placeholder="cvv" v-model="cvc" maxlength="3" v-on:keyup="validateCvc" >
+										<div v-if="!cvcValidCheck" style="color:red;" >Enter valid CVC</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Upload document </label>
+											<input type="file" id=""  ref="file"  class="" v-on:change="stripeDocUpload" />
+										</div>
+									</div>
+									<div class="col-md-6">
+										<label>SSN</label>
+										<input type="text" name="SSN" class="form_cus form-control"  placeholder="SSN" v-model="ssn" v-validate="'required'" >
+										<span class="error" v-if="errors.has('SSN')">{{errors.first('SSN')}}</span>
+									</div>									
+								</div>
+								
 								<!-- <div class="form-group">
 									<button type="submit" class="save_btn1 btn green_btn">Save</button>
 								</div> -->
@@ -308,7 +355,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr v-for="user_project in user_project_buy " v-bind:key="user_project.project_id" v-if="user_project.project_ShareImage.length > 0" >
+					<tr v-for="user_project in user_project_buy " v-bind:key="user_project.id" v-if="user_project.project_ShareImage.length > 0" >
 				
 						<th>{{ user_project.user_detail.username  }}</th>
 						<td>{{ user_project.project_name  }}</td>
@@ -327,7 +374,7 @@
 						<td class="text-success" >Paid</td>
 						<!-- <td class="text-danger" v-else>Awaiting Payment </td> -->
 
-						<td  ><a href="#" class="finance_btn active">Withdrawal</a></td>
+						<td  ><a href="#" class="finance_btn active" v-on:click="paymentWithdraw(user_project.id)" >Withdrawal</a></td>
 						<!-- v-if="user_project.purchase_details >= 1"<td v-else ><a href="#" class="finance_btn">Withdrawal</a></td> -->
 					</tr>
 					
@@ -504,72 +551,92 @@ export default {
 		: "",
 		last_name: userData.user_profile.last_name
         ? userData.user_profile.last_name
-        : "",
-      address: userData.user_profile.address
+		: "",
+		dob:userData.user_profile.dob
+		? userData.user_profile.dob:'',
+		
+		ssn:userData.company_profile.ssn?userData.company_profile.ssn:"",
+      	address: userData.user_profile.address
         ? userData.user_profile.address
         : "",
-      logo: userData.user_profile.logo ? userData.user_profile.logo : "",
-      phone: userData.user_profile.phone ? userData.user_profile.phone : "",
-      name: userData.name,
-      company_name: userData.company_profile.company_name
+      	logo: userData.user_profile.logo ? userData.user_profile.logo : "",
+      	phone: userData.user_profile.phone ? userData.user_profile.phone : "",
+      	name: userData.name,
+      	company_name: userData.company_profile.company_name
         ? userData.company_profile.company_name
         : "",
-      company_city: userData.company_profile.company_city
+      	company_city: userData.company_profile.company_city
         ? userData.company_profile.company_city
         : "",
-      company_address: userData.company_profile.company_address
+      	company_address: userData.company_profile.company_address
         ? userData.company_profile.company_address
         : "",
-      company_state: userData.company_profile.company_state
+      	company_state: userData.company_profile.company_state
         ? userData.company_profile.company_state
         : "",
-      company_zip: userData.company_profile.company_zip
+      	company_zip: userData.company_profile.company_zip
         ? userData.company_profile.company_zip
         : "",
-      company_country: userData.company_profile.company_country
+      	company_country: userData.company_profile.company_country
         ? userData.company_profile.company_country
         : "",
-      company_phone_buss: userData.company_profile.company_phone_buss
+      	company_phone_buss: userData.company_profile.company_phone_buss
         ? userData.company_profile.company_phone_buss
 		: "",
-	  company_mobile_buss:userData.company_profile.company_mobile_buss
+	  	company_mobile_buss:userData.company_profile.company_mobile_buss
         ? userData.company_profile.company_mobile_buss
 		: "",
-      company_phone_fax: userData.company_profile.company_phone_fax
+      	company_phone_fax: userData.company_profile.company_phone_fax
         ? userData.company_profile.company_phone_fax
         : "",
-      company_business_email: userData.company_profile.company_business_email
+      	company_business_email: userData.company_profile.company_business_email
         ? userData.company_profile.company_business_email
         : "",
-      company_website: userData.company_profile.company_website
+      	company_website: userData.company_profile.company_website
         ? userData.company_profile.company_website
         : "",
-      company_logo: "/database/" +userData.email + '/'+ userData.company_profile.company_logo,
-	  company_film: "/database/" +userData.email + '/'+ userData.company_profile.other_image,
-	  company_logo_name:userData.company_profile.company_logo,
-	  company_film_name:userData.company_profile.other_image,
-      company_join_date: userData.company_profile.company_join_date
+      	company_logo: "/database/" +userData.email + '/'+ userData.company_profile.company_logo,
+	  	company_film: "/database/" +userData.email + '/'+ userData.company_profile.other_image,
+	  	company_logo_name:userData.company_profile.company_logo,
+	  	company_film_name:userData.company_profile.other_image,
+      	company_join_date: userData.company_profile.company_join_date
         ? userData.company_profile.company_join_date
-        : " ",
-      payplans: "",
-      user_subscription: "",
-      user_subscription_payplans: "",
-      user_project_buy: "",
+		: " ",
+		card_no:'',
+		month:'', 
+		year:'', 
+		cvc : '', 
+		payplans: "",
+		user_subscription: "",
+		user_subscription_payplans: "",
+		user_project_buy: "",
 		message: '',
-	projectPriceCompleted_amount:0,
-	projectPriceAwaited_amount:0,
-	project_completed_count:0,
-	project_awaited_count:0,
-	countries:[],
-	states:[],
-	chartLoaded:false,
-	currentSubscription:null
-
+		projectPriceCompleted_amount:0,
+		projectPriceAwaited_amount:0,
+		project_completed_count:0,
+		project_awaited_count:0,
+		countries:[],
+		states:[],
+		chartLoaded:false,
+		stripDocFile:{},
+		cardValidCheck:true,
+		expariValidCheck:true,
+		cvcValidCheck:true, 
+		currentSubscription:null
     };
   },
   methods: {
-	getImg:(id) =>{
-		return '/assets/img/plan_icon_'+ id +'.png';
+	paymentWithdraw(project_id){
+		console.log("withdraw",project_id);
+		let data = { project_id:project_id };
+		 axios
+        .post("/api/paymentWithdraw", data)
+        .then(({ response }) => {
+          	console.log(response);		  
+		  	this.flash("Profile updated successfully", "success");
+        }).catch(({ response }) => {
+            console.log(response);
+        });
 	},
 	projectCompletedCount(){
 		this.user_project_buy.forEach(function(el){
@@ -658,15 +725,16 @@ export default {
       let auth_token = window.localStorage.getItem("token");
       let userData = JSON.parse(window.localStorage.getItem("user"));
       let data = {
-        email: userData.email,
+		email: userData.email,
         user_id: userData.id,
-        password: userData.password,
+		password: userData.password,
+		dob:this.dob,
 		first_name: this.first_name,
 		last_name : this.last_name,
         address: this.address,
         logo: this.logo,
         phone: this.phone,
-        auth_token: auth_token
+		auth_token: auth_token,
       };
       axios
         .post("/api/user_profile", data)
@@ -678,32 +746,100 @@ export default {
           .catch(({ response }) => {
               //console.log(response);
           });
-    },
+	},
+	validateCard(){
+		var valid = Stripe.card.validateCardNumber(this.card_no);
+		if(valid){
+			this.cardValidCheck = true;
+		}else{
+			this.cardValidCheck = false;
+		}
+		console.log("card No",valid);
+		return;
+	},
+	validateMonth(){
+		var valid = Stripe.card.validateExpiry(this.month,this.year);
+		if(valid){
+			this.expariValidCheck = true;
+		}else{
+			this.expariValidCheck = false;
+		}
+		console.log("Expary ",valid);
+		return;
+	},
+	validateYear(){
+		var valid = Stripe.card.validateExpiry(this.month,this.year);
+		if(valid){
+			this.cvcValidCheck = true;
+		}else{
+			this.cvcValidCheck = false;
+		}
+		console.log("Expary ",valid);
+		return;
+	},
+	validateCvc(){
+		var valid = Stripe.card.validateCVC(this.cvc);
+		console.log("pravin kumar",valid);
+		return;
+	},
     edit_save_company_profile() {
+
       this.$validator.validateAll();
-      if (this.errors.any()) {
+      if (this.errors.any()){
         return;
-      }
+	  }
+	  	  
       let auth_token = window.localStorage.getItem("token");
       let userData = JSON.parse(window.localStorage.getItem("user"));
-      let data = {
-        user_id: userData.id,
-        company_name: this.company_name,
-        company_address: this.company_address,
-        company_city: this.company_city,
-        company_state: this.company_state,
-        company_zip: this.company_zip,
-        company_country: this.company_country,
-		company_phone_buss: this.company_phone_buss,
-		company_mobile_buss:this.company_mobile_buss,
-        company_phone_fax: this.company_phone_fax,
-        company_business_email: this.company_business_email,
-        company_website: this.company_website,
-        company_join_date: this.company_join_date,
-        auth_token: auth_token
-      };
+    //   let data = {
+    //     user_id: userData.id,
+    //     company_name: this.company_name,
+    //     company_address: this.company_address,
+    //     company_city: this.company_city,
+    //     company_state: this.company_state,
+    //     company_zip: this.company_zip,
+    //     company_country: this.company_country,
+	// 	   company_phone_buss: this.company_phone_buss,
+	// 	   company_mobile_buss:this.company_mobile_buss,
+    //     company_phone_fax: this.company_phone_fax,
+    //     company_business_email: this.company_business_email,
+    //     company_website: this.company_website,
+    //     company_join_date: this.company_join_date,
+	// 	   auth_token: auth_token,
+	// 	   card_no: this.card_no,
+	// 	   month: this.month,
+	// 	   year: this.year,
+	// 	   cvc: this.cvc,
+	//   };
+
+	let formData = new FormData();
+	if(this.stripDocFile && this.stripDocFile.name){
+		formData.append("file", this.stripDocFile, this.stripDocFile.name);
+	}
+	formData.append("user_id", userData.id);
+	formData.append("company_name", this.company_name);
+	formData.append("company_address", this.company_address);
+	formData.append("company_city", this.company_city);
+	formData.append("company_state", this.company_state);
+	formData.append("company_zip", this.company_zip);
+	formData.append("company_country", this.company_country);
+	formData.append("company_phone_buss", this.company_phone_buss);
+	formData.append("company_mobile_buss", this.company_mobile_buss);
+	formData.append("company_phone_fax", this.company_phone_fax);
+	formData.append("company_business_email", this.company_business_email);
+	formData.append("company_website", this.company_website);
+	formData.append("company_join_date", this.company_join_date);
+	formData.append("auth_token", this.auth_token);
+	formData.append("card_no", this.card_no);
+	formData.append("month", this.month);
+	formData.append("year", this.year);
+	formData.append("cvc", this.cvc);
+	formData.append("ssn",this.ssn);
+
+	
+
       axios
-        .post("/api/company_profile", data)
+        .post("/api/company_profile", formData)
         .then(({ response }) => {
           this.getUserData();
           this.flash("Company profile updated successfully", "success");
@@ -713,7 +849,25 @@ export default {
           //console.log(response);
         });
     },
+	stripeDocUpload(){
+		
+		var selectedFile = event.target.files[0];
+		this.stripDocFile = selectedFile;
+		console.log(this.stripDocFile);
 
+		// let formData = new FormData();
+		// formData.append("file", selectedFile, selectedFile.name);
+		// axios.post("/api/" + upload_route, formData, {
+		// 	headers: {
+		// 		"Content-Type": "multipart/form-data"
+		// 	}
+		// 	}).then(({ data }) => {
+		// 		this.getUserData();
+		// 		console.log(data);
+		// 	}).catch(({ response }) => {
+		// 		//console.log(response);
+		// 	});
+	},
     companyUpload(event) {
       var upload_route = "";
       if (event.target.attributes.id.value == "company_logo") {

@@ -39,6 +39,7 @@ class User extends Authenticatable
         'email', 
         'country_id',
         'password',
+        'connect_id',
         'stripe_id',
         'card_brand',
         'card_last_four',

@@ -19,7 +19,7 @@ class CompanyProfile extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_id', 'company_name', 'company_address', 'company_city', 'company_state', 'company_zip', 'company_country', 'payment_type', 'company_phone_buss','company_mobile_buss','company_phone_fax', 'company_business_email', 'company_website', 'company_currency', 'company_logo', 'other_image', 'company_join_date'
+        'user_id','ssn','company_name', 'company_address', 'company_city', 'company_state', 'company_zip', 'company_country', 'payment_type', 'company_phone_buss','company_mobile_buss','company_phone_fax', 'company_business_email', 'company_website', 'company_currency', 'company_logo', 'other_image', 'company_join_date'
     ];
 
     /**
