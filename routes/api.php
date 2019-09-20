@@ -99,6 +99,7 @@ Route::middleware('auth:api')->group(function (){
     Route::get('/count_notice', 'API\NoticealertController@countNotice');
     Route::get('/notice_list', 'API\NoticealertController@getListOfNotice');
     Route::get('/de_notice', 'API\NoticealertController@delListOfNotice');
+    Route::post('/current-subscription-plan', 'API\SubscriptionController@getCurrentSubscriptionPlan');
 });
 
 

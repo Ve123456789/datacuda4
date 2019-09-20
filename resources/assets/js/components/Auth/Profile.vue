@@ -281,8 +281,8 @@
 							<span>/{{ plan.storage_quantity }} {{ plan.storage_unit }}</span>
 						</div>
 						<p v-for="benifit in plan.benifits" v-bind:key="benifit">{{ benifit }}</p>
-						<!-- <a href="javascript:void(0)" class="btn default_btn" v-if="payplan.activeplan === 'Active'" aria-disabled="true">Current Plan</a> -->
-						<a href="javascript:void(0)" class="btn green_btn text-capitalize" v-on:click="planpay(plan.id)">try it now</a>
+						<a href="javascript:void(0)" class="btn default_btn border" v-if="plan.id === currentSubscription.id" aria-disabled="true">Current Plan</a>
+						<a href="javascript:void(0)" class="btn green_btn text-capitalize" v-on:click="planpay(plan.id)" v-else>try it now</a>
 					</div>
 				</div>
 			</div>
@@ -563,6 +563,7 @@ export default {
 	countries:[],
 	states:[],
 	chartLoaded:false,
+	currentSubscription:null
 
     };
   },
@@ -616,7 +617,17 @@ export default {
 	},			
 	show_pay_plans() {
       this.$modal.show("plan_buy");
-    },
+	},
+	getCurrentSubscriptionPlan() {
+		axios
+        .post("/api/current-subscription-plan")
+        .then(function(res) {
+		  	this.currentSubscription = res.data.data;
+        }.bind(this))
+        .catch(function(response) {
+          console.log("error",response);
+        });
+	},
     getUserData() {
       axios
         .get("/api/get_user_detail")
@@ -895,7 +906,8 @@ export default {
   },
   created() {
 	this.getUserData();
-    this.get_user_project_buy_details();
+	this.get_user_project_buy_details();
+	this.getCurrentSubscriptionPlan();
   },
   beforeMount() {}
 };
