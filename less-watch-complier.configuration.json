@@ -1,0 +1,8 @@
+{
+  "watchFolder": "public/assets/css",
+  "outputFolder": "public/assets/css",
+  "mainFile": "datacuda.less",
+  "sourceMap": false,
+  "runOnce": false,
+  "enableJs": true
+}
