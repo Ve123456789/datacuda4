@@ -113,8 +113,10 @@ class SubscriptionController extends Controller
 
     public function getCurrentSubscriptionPlan (Request $request) {
         $plan = $request->user()->subscriptions()->latest()->first();
-        $plan = $plan ? $plan->plan()->select(['id', 'name'])->first() : null;
+        $data = $plan ? ['created_at' => $plan->created_at->format('F d, Y h:i A')] : [];
+        $plan = $plan ? $plan->plan()->select(['id', 'name', 'amount'])->first() : null;
+        $data = array_merge ($data, $plan ? $plan->toArray() : []);
 
-        return response()->json(['status' => 200, 'message'=> 'Subscription information found', 'data' => $plan]);
+        return response()->json(['status' => 200, 'message'=> 'Subscription information found', 'data' => $data]);
     }
 }
