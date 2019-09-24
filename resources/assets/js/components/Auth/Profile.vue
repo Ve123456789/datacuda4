@@ -622,7 +622,7 @@
 						<a class="btn green_btn" href="#">Upgrade Plan</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link short" href="#">Downgrage Plan</a>
+						<a class="nav-link short" id="downgrade_plan" href="#">Downgrage Plan</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link short" href="#">Cancel Plan</a>
@@ -647,7 +647,7 @@
 					<tr v-if="currentSubscription">
 						<td>{{ currentSubscription.created_at | formatDateTime }}</td>
 						<td>True</td>
-						<td>${{ currentSubscription.amount/100 }}</td>
+						<td>${{ currentSubscription.plan.amount }}</td>
 					</tr>
 
 					</tbody>
@@ -1248,7 +1248,7 @@ export default {
 
     }.bind(this));
 
-    $("#plan_nav").click(function(){
+    $("#plan_nav, #downgrade_plan").click(function(){
 		$("#plan_data").show();
 		$("#banking_data").hide();
         $("#finance_data").hide();
