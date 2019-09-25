@@ -107,7 +107,7 @@ class AuthController extends Controller
                     'from_id' => 'info@datatcuda.com',
                     'subject' => 'Welcome to Datacuda.',
                     'view' => 'mail_template/register_mail',
-                    'data' => "forget_message"
+                    'data' => array('username',$username),
                     // 'data' => $reset_link
                 ];
                 if (!send_mail($mail_details)) {
@@ -193,7 +193,7 @@ class AuthController extends Controller
                 'from_id' => 'info@datatcuda.com',
                 'subject' => 'Welcome to Datacuda.',
                 'view' => 'mail_template/register_mail',
-                'data' => "forget_message"
+                'data' => array('username',$username),
                 // 'data' => $reset_link
             ];
             if (!send_mail($mail_details)) {
