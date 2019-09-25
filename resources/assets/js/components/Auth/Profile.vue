@@ -622,7 +622,7 @@
 						<a class="btn green_btn" href="#">Upgrade Plan</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link short" href="#">Downgrage Plan</a>
+						<a class="nav-link short" id="downgrade_plan" href="#">Downgrage Plan</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link short" href="#">Cancel Plan</a>
@@ -632,7 +632,7 @@
 
 			<div class="payment_content_data">
 				<div class="payment_data_heading clearfix">
-					<h3>{{ user_subscription_payplans.name }}</h3>
+					<h3 v-if="currentSubscription">{{ currentSubscription.name }}</h3>
 					<a href="#" class="view_plan_btn tdn blue_color">View Plans</a>
 				</div>
 				<table class="table table_responsive">
@@ -644,16 +644,16 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr>
-						<td>{{ user_subscription_payplans.created_at | formatDateTime }}</td>
+					<tr v-if="currentSubscription">
+						<td>{{ currentSubscription.created_at | formatDateTime }}</td>
 						<td>True</td>
-						<td>${{ user_subscription_payplans.amount/100 }}</td>
+						<td>${{ currentSubscription.plan.amount }}</td>
 					</tr>
 
 					</tbody>
 				</table>
 			</div>
-			<div class="payment_content_data">
+			<!--<div class="payment_content_data">
 				<div class="payment_data_heading clearfix">
 					<h3>Charges and Credits</h3>
 					<a href="#" class="view_plan_btn tdn blue_color">View Plans</a>
@@ -677,7 +677,7 @@
 
 					</tbody>
 				</table>
-			</div>
+			</div>-->
 		</div>
 		 <modal name="plan_buy" height="auto" width= "70%" :scrollable="true" draggable=".window-header">
             <Pay/>
