@@ -625,10 +625,11 @@
 						<a class="nav-link short" id="downgrade_plan" href="#">Downgrage Plan</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link short" href="#">Cancel Plan</a>
+						<a class="nav-link short" href="#" v-on:click="cancelProcess" >Cancel Plan</a>
 					</li>
 				</ul>
 			</ul>
+			<div v-if="cancelShow" >This is cancel div </div>
 
 			<div class="payment_content_data">
 				<div class="payment_data_heading clearfix">
@@ -801,9 +802,14 @@ export default {
 		debitCard_valid:'',
 		currentSubscription:null,
 		live_data:userData.live_data,
+		cancelShow:false,
     };
   },
   methods: {
+	cancelProcess(){
+		console.log('dfdfdfdf');
+		this.cancelShow = true;
+	},
 	paymentWithdraw(project_id){
 		console.log("withdraw",project_id);
 		let data = { project_id:project_id };
