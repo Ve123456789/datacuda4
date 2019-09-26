@@ -37,7 +37,7 @@
                                 <span class="error" v-if="errors.has('email')">{{errors.first('email')}}</span>
                             </div>
                             <div class="form-group">
-                                <input type="password" name = "password" ref="password" class="form_cus form-control" id="password" placeholder="Password" v-model="password" v-validate="'required'">
+                                <input type="password" name = "password" ref="password" class="form_cus form-control" id="password" placeholder="Password" v-model="password" v-validate="'required|min:8'">
                                 <div class="error" v-if="errors.has('password')" autocomplete="off" >
                                     {{ errors.first('password') }}
                                 </div>

@@ -300,46 +300,46 @@
 								<div class="row">
 									<div class="form-group col-md-6">
 										<label class="account_lable">First Name *</label>
-										<input type="text" class="form-control" name="First Name" v-model="b_first_name" v-validate="'required|alpha_num'" >
-										<span class="error" v-if="errors.has('First Name')">{{errors.first('First Name')}}</span>
+										<input type="text" class="form-control" name="Banking First Name" v-model="b_first_name" v-validate="'required|alpha_num'" >
+										<span class="error" v-if="errors.has('Banking First Name')">{{errors.first('Banking First Name')}}</span>
 									</div>
 
 									<div class="form-group col-md-6">
 											<label class="account_lable">Last Name *</label>
-										<input type="text" class="form-control" name="Last Name" v-model="b_last_name" v-validate="'required|alpha_num'" >
-										<span class="error" v-if="errors.has('Last Name')">{{errors.first('Last Name')}}</span>
+										<input type="text" class="form-control" name="Banking Last Name" v-model="b_last_name" v-validate="'required|alpha_num'" >
+										<span class="error" v-if="errors.has('Banking Last Name')">{{errors.first('Banking Last Name')}}</span>
 									</div>
 
 									<div class="form-group col-md-6">
 										<label class="account_lable">Phone</label>
-										<input type="text" class="form-control" name="Phone" v-model="b_phone"  v-validate="'required'" >
-										<span class="error" v-if="errors.has('Phone')">{{errors.first('Phone')}}</span>
+										<input type="text" class="form-control" name="Banking Phone" v-model="b_phone"  v-validate="'required'" >
+										<span class="error" v-if="errors.has('Banking Phone')">{{errors.first('Banking Phone')}}</span>
 									</div>
 
 									<div class="form-group col-md-6">
 										<label class="account_lable">Email</label>
-										<input type="text" class="form-control" name="Email" v-model="b_email"  v-validate="'required|email'" >
-										<span class="error" v-if="errors.has('Email')">{{errors.first('Email')}}</span>
+										<input type="text" class="form-control" name="Banking Email" v-model="b_email"  v-validate="'required|email'" >
+										<span class="error" v-if="errors.has('Banking Email')">{{errors.first('Banking Email')}}</span>
 										<span class="tool_tip">Change email</span>
 									</div>
 
 									
 									<div class="form-group col-md-6">
 										<label class="account_lable">DOB*</label>
-										<input id="datefield" placeholder="Date Of Birth" type="date" name="DOB" class=" form-control"
+										<input id="datefield" placeholder="Date Of Birth" type="date" name="Banking DOB" class=" form-control"
                                                         v-model="b_dob" v-validate="'required'">
-										<span class="error" v-if="errors.has('DOB')">{{errors.first('DOB')}}</span>
+										<span class="error" v-if="errors.has('Banking DOB')">{{errors.first('Banking DOB')}}</span>
 									</div>
 
 									<div class="form-group col-md-6">
 										<label class="account_lable">Address *</label>
-										<input type="text" class="form-control" name="Address" v-model="b_address" v-validate="'required'" >
-										<span class="error" v-if="errors.has('Address')">{{errors.first('Address')}}</span>
+										<input type="text" class="form-control" name="Banking Address" v-model="b_address" v-validate="'required'" >
+										<span class="error" v-if="errors.has('Banking Address')">{{errors.first('Banking Address')}}</span>
 									</div>
 
 									<div class="form-group col-md-6">
 										<label class="account_lable">State *</label>
-										<select class="form-control" id="exampleFormControlSelect1" name="State" v-model="b_state" v-validate="'required'"  >
+										<select class="form-control" id="exampleFormControlSelect1" name="Banking State" v-model="b_state" v-validate="'required'"  >
 											<option value="" >Countries</option>
 											<option value="AL" >ALABAMA</option>
 											<option value="AK" >Alaska</option>
@@ -391,20 +391,20 @@
 											<option value="WI" >Wisconsin</option>
 											<option value="WY" >Wyoming</option>
 										</select>
-										<span class="error" v-if="errors.has('State')">{{errors.first('State')}}</span>
+										<span class="error" v-if="errors.has('Banking State')">{{errors.first('Banking State')}}</span>
 									</div>
 
 									<div class="form-group col-md-6">
 										<label class="account_lable">City *</label>
-										<input type="text" class="form-control" name="City" v-model="b_city" v-validate="'required|alpha_num'" >
-										<span class="error" v-if="errors.has('City')">{{errors.first('City')}}</span>
+										<input type="text" class="form-control" name="Banking City" v-model="b_city" v-validate="'required|alpha_num'" >
+										<span class="error" v-if="errors.has('Banking City')">{{errors.first('Banking City')}}</span>
 									</div>
 
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Zip Code </label>
-											<input type="text" class="form-control" placeholder="Zip Code" name="Zip Code" v-model="b_zip"  v-validate="'required|alpha_num'" >
-											<span class="error" v-if="errors.has('Zip Code')">{{errors.first('Zip Code')}}</span>
+											<input type="text" class="form-control" placeholder="Zip Code" name="Banking Zip Code" v-model="b_zip"  v-validate="'required|alpha_num'" >
+											<span class="error" v-if="errors.has('Banking Zip Code')">{{errors.first('Banking Zip Code')}}</span>
 										</div>
 									</div>
 
@@ -476,8 +476,9 @@
 							<span>/{{ plan.storage_quantity }} {{ plan.storage_unit }}</span>
 						</div>
 						<p v-for="benifit in plan.benifits" v-bind:key="benifit">{{ benifit }}</p>
-						<a href="javascript:void(0)" class="btn default_btn border" v-if="(plan !== null && currentSubscription != null) && plan.id === currentSubscription.id" aria-disabled="true">Current Plan</a>
+						<a href="javascript:void(0)" class="btn default_btn border" v-if="(plan != null && currentSubscription != null) && (plan.id === currentSubscription.plan_id)" aria-disabled="true">Current Plan</a>
 						<a href="javascript:void(0)" class="btn green_btn text-capitalize" v-on:click="planpay(plan.id)" v-else>try it now</a>
+						
 					</div>
 				</div>
 			</div>
@@ -629,7 +630,10 @@
 					</li>
 				</ul>
 			</ul>
-			<div v-if="cancelShow" >This is cancel div </div>
+			<div v-if="cancelShow" >
+				<span v-if="currentSubscription" class="btn btn-danger" v-on:click="cancelSubscription">Cancel current Subscription Plan</span>
+				<span v-else>You don't have any subscription plan active.</span>
+			</div>
 
 			<div class="payment_content_data">
 				<div class="payment_data_heading clearfix">
@@ -723,10 +727,6 @@ export default {
 		dob:userData.user_profile.dob
 		? userData.user_profile.dob:'',
 		
-		ssn:userData.company_profile.ssn?userData.company_profile.ssn:"",
-      	address: userData.user_profile.address
-        ? userData.user_profile.address
-        : "",
       	logo: userData.user_profile.logo ? userData.user_profile.logo : "",
       	phone: userData.user_profile.phone ? userData.user_profile.phone : "",
       	name: userData.name,
@@ -783,6 +783,7 @@ export default {
 		month:userData.banking_profile && userData.banking_profile.month ? userData.banking_profile.month : "", 
 		year:userData.banking_profile && userData.banking_profile.year ? userData.banking_profile.year : "",
 		cvc : userData.banking_profile && userData.banking_profile.cvc ? userData.banking_profile.cvc : "",
+		ssn:userData.banking_profile && userData.banking_profile.ssn?userData.banking_profile.ssn:"",
 		payplans: "",
 		user_subscription: "",
 		user_subscription_payplans: "",
@@ -806,6 +807,16 @@ export default {
     };
   },
   methods: {
+	cancelSubscription () {
+		axios
+        	.delete("/api/cancel-subscription")
+        	.then(({ response }) => {
+          		console.log(response);		  
+		  		this.flash(response.data.message, "success");
+        	}).catch(({ error }) => {
+				this.flash(error.data.message, "error");
+        	});
+	},
 	cancelProcess(){
 		console.log('dfdfdfdf');
 		this.cancelShow = true;

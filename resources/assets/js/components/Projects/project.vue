@@ -65,10 +65,15 @@
                     <div class="col-md-12 col-lg-3">
                         <aside class="side_bar">
                             <div class="project_profile">
-                                <span v-if="medias[0]"><img v-bind:src="image_path+'medium/'+ medias[0].filename"
-                                        v-img:name class="project_profile_img" width="100%"></span>
-                                <span v-else><img v-bind:src="'storage/user_medium/'" v-img:name
-                                        class="project_profile_img" width="100%"></span>
+                                <span v-if="medias[0]">
+                                    <img v-bind:src="image_path+'medium/'+ medias[0].filename"
+                                        v-img:name class="project_profile_img" width="100%">
+                                </span>
+                                <span v-else>
+                                    <img  :src="'assets/img/dummy_image.jpg'" class="project_profile_img" width="100%" >
+                                    <!-- <img v-bind:src="'storage/user_medium/'" v-img:name
+                                        class="project_profile_img" width="100%"> -->
+                                </span>
                                 <div class="project_content_wrapper">
                                     <div class="clearfix">
                                         <div class="p_left_content">
@@ -298,7 +303,7 @@
                                                     <input id="datefield" placeholder="Invoice Date" type="date" name="Invoice Date" class=" form-control"
                                                         v-model="invoice_date" v-validate="'required'">
                                                     <span class="error"
-                                                        v-if="errors.has('Invoice Date')">{{errors.first('Invoice Date')}}</span>
+                                                        v-if="errors.has('Invoice Date')">The Invoice Date must be in the format dd/mm/yyyy. </span>
                                             </div>
                                             
                                                 

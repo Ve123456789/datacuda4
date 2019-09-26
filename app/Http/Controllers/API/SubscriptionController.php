@@ -118,4 +118,13 @@ class SubscriptionController extends Controller
 
         return response()->json(['status' => 200, 'message'=> 'Subscription information found', 'data' => $plan]);
     }
+
+    public function cancelSubscription (Request $request) {
+        if ($plan = $request->user()->subscriptions()->latest()->first()) {
+            $plan->delete();
+            return response()->json(['status' => 200, 'message'=> 'Subscription plan has been cancelled', 'data' => []]);
+        }
+
+        return response()->json(['status' => 200, 'message'=> 'Subscription plan has been cancelled', 'data' => []]);
+    }
 }

@@ -41,12 +41,7 @@
                   />
                 </span>
                 <span v-else>
-                  <img
-                    v-bind:src="'storage/user_medium/'"
-                    v-img:name
-                    class="project_profile_img"
-                    width="100%"
-                  />
+                  <img  :src="'assets/img/dummy_image.jpg'" class="project_profile_img" width="100%" >
                 </span>
                 <div class="project_content_wrapper">
                   <div class="clearfix">
