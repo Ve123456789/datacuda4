@@ -202,3 +202,31 @@ function memoryConverterToBytes (int $quantity, string $unit):int {
     }
 
 }
+
+function reverseMemoryConversion (int $quantity):float {
+    $tb = 1099511627776;
+    $gb = 1073741824;
+    $mb = 1048576;
+
+    if ($quantity >= $tb) {
+        return number_format ($quantity/$tb, 2, '.', '');
+    } else if ($quantity >= $gb) {
+        return number_format ($quantity/$gb, 2, '.', '');
+    }
+
+    return number_format ($quantity/$mb, 2, '.', '');
+}
+
+function reverseMemoryConversionUnit (int $quantity):string {
+    $tb = 1099511627776;
+    $gb = 1073741824;
+    $mb = 1048576;
+
+    if ($quantity >= $tb) {
+        return 'tb';
+    } else if ($quantity >= $gb) {
+        return 'gb';
+    }
+    
+    return 'mb';
+}

@@ -188,12 +188,11 @@ class ProjectController extends Controller{
         endforeach;
         
         $plan = $request->user()->subscriptions()->latest()->first();
-        $plan = $plan ? $plan->plan()->first() : null;
 
         $size = [
             'usag' => convertToReadableSize($project_size),
-            'plan'  => $plan ? $plan->storage_quantity : null,
-            'plan_unit'  => $plan ? $plan->storage_unit : null,
+            'plan'  => reverseMemoryConversion($plan->storage_quantity),
+            'plan_unit'  => reverseMemoryConversionUnit($plan->storage_quantity),
         ];
         return response()->json(['status' => 201, 'message' => 'Project created successfully', 'UserProjects' => $ProjectData,'usagedata'=>$size, 'project_size_in_byte' => $project_size]);
     }

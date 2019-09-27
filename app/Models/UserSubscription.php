@@ -22,6 +22,15 @@ class UserSubscription extends Model
     }
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'status' => true,
+    ];
+
+    /**
      * The attributes that aren't mass assignable.
      *
      * @var array
