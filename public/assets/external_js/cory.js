@@ -255,5 +255,3 @@ var handleFiles = (files) => {
 
 
 }
-
-

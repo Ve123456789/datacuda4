@@ -75,8 +75,8 @@ function random($length = 16)
 
     return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
 }
-function create_public_dir($data,$exp)
-{
+function create_public_dir($data,$exp){
+    
     $dir = [];
     if($exp == 'r'):
            if(!File::isDirectory(public_path('database/'.$data['email'])))
@@ -169,6 +169,41 @@ function create_public_dir($data,$exp)
         return $dir;
     endif;
 }
+
+/***
+ * function : custom_copy
+ * working  : copy directory  
+ */
+
+function custom_copy($src, $dst){  
+  
+    // open the source directory 
+    $dir = opendir($src);  
+
+    // Make the destination directory if not exist 
+    if(!is_dir($dst)) {
+       mkdir($dst,0775,true);
+    }
+
+    // Loop through the files in source directory 
+    while( $file = readdir($dir) ) {  
+        
+        if (( $file != '.' ) && ( $file != '..' )) {  
+            if (is_dir($src . '/' . $file) ){  
+                // Recursively calling custom copy function 
+                // for sub directory  
+                custom_copy($src . '/' . $file, $dst . '/' . $file);  
+            }  
+            else{  
+                copy($src . '/' . $file, $dst . '/' . $file);  
+            }  
+        }  
+    }  
+  
+    closedir($dir); 
+}
+
+
 function rand_string( $length ) {
 
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

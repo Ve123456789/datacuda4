@@ -64,6 +64,78 @@ class ProjectController extends Controller{
 
 
     /*
+        function name : create_project_copy
+        functionality : create project for user
+    */
+    public function create_project_copy(Request $request){
+
+        // $validator = Validator::make($request->all(), [
+        //     'project_name' => 'required|unique:user_projects,project_name',
+        // ]);
+
+
+        
+
+        $m = UserProjects::where("project_name",request('project_name'))->where("user_id",Auth::user()->id)->get()->count();
+
+        if ($m>0) {
+            return response()->json(['error' =>array("The project name has already been taken."),'status' => '401']);
+        }
+
+        $project_id = key_encryption(request('project_id'),'d');
+       
+        $current_project_data = UserProjects::where("id",'=',$project_id)
+        ->where("user_id",Auth::user()->id)
+        ->get()->first();
+       
+        $media_data = $current_project_data->medias()->where('status', 1)->orderBy('id', 'DESC')->get();
+       
+        //Save data into the table
+        $project_path = rand_string(8);
+        $data_saved = UserProjects::create([
+            'user_id' => Auth::user()->id,
+            'project_name' => request('project_name'),
+            'project_logo' => request('project_name'),
+            'project_price' => 0,
+            'project_slug' => request('project_name'),
+            'project_path' => $project_path,
+            'created_at' => date('d-m-y h:i:s')
+        ]);
+        
+        $dir_data = [
+            'id'            =>  $data_saved->id,
+            'email'         =>  Auth::user()->email,
+            'project_path'  =>  $data_saved->project_path,
+        ];
+
+        custom_copy(public_path('database/'.$dir_data['email'].'/'.$current_project_data->project_path.$current_project_data->id),public_path('database/'.$dir_data['email'].'/'.$dir_data['project_path'].$dir_data['id']));
+
+        custom_copy(storage_path('app/usersdata/'.$project_id),storage_path('app/usersdata/'.$dir_data['id']));
+
+        //media database copy start here 
+        foreach($media_data as $media){
+            $id = DB::table('medias')->insertGetId(
+                ['media_type' => $media->media_type,
+                    'title' => $media->title,
+                    'filename' => $media->filename,
+                    'amount'=> $media->amount,
+                    'ext' => $media->ext,
+                    'status' => $media->status,
+                    'size' => $media->size,
+                    'img_360'=>$media->img_360,
+                ]
+            );
+            UserProjects::find($data_saved->id)->medias()->attach($id);
+        }
+
+        $copy_project_id = key_encryption($data_saved->id);
+
+        // mkdir(public_path('database/'.$dir_data['email'].'/'.$dir_data['project_path'].$dir_data['id']),0775,true);
+        //create_public_dir($dir_data,'p');
+        return response()->json(['status' => 201, 'message' => 'Project created successfully', 'project_id' => $copy_project_id]);
+    }
+
+    /*
         function name : update_project
         functionality : update project for user
     */
@@ -81,6 +153,16 @@ class ProjectController extends Controller{
         }
 
         $project_id = key_encryption(request('id'),'d');
+
+
+        $m = UserProjects::where("project_name",request('project_name'))
+        ->where("id",'!=',$project_id)
+        ->where("user_id",Auth::user()->id)
+        ->get()->count();
+
+        if ($m>0) {
+            return response()->json(['error' =>array("project_name"=>["The project name has already been taken."]),'status' => '401']);
+        }
 
         //Save data into the table
         // DB::table()->where("id",$project_id)->update([
