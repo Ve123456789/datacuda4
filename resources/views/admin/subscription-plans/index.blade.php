@@ -59,6 +59,7 @@
 										<th>Name</th>
 										<th>Amount</th>
 										<th>Storage</th>
+										<th>Validity</th>
 										<th>Commission</th>
 										<th>Is Active?</th>
 										<th class="text-center"><i class="icon-menu-open2"></i></th>
@@ -70,6 +71,7 @@
 										<td>{{ ucwords ($plan->name) }}</td>
 										<td>$ {{ $plan->amount }}</td>
 										<td>{{ $plan->storage_quantity }} {{ strtoupper ($plan->storage_unit) }}</td>
+										<td>{{ $plan->vailidity_quantity ?? 0 }} {{ strtoupper ($plan->validity_unit) }}</td>
 										<td>{{ $plan->commission }}%</td>
 										<td>{{ $plan->active ? 'Yes' : 'No' }}</td>
 										<td class="text-center">

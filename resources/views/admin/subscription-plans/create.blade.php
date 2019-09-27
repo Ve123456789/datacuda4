@@ -100,7 +100,7 @@
 
                                     <div class="form-group">
                                         <label class="control-label col-lg-2">
-                                            Storage Quantity
+                                            Storage
                                             <span class="text-danger text-center p-1">*</span> 
                                         </label>
                                         <div class="col-lg-8">
@@ -116,6 +116,29 @@
                                                         <option value="tb">TB</option>
                                                     </select>
                                                     <div class="text-danger p-1" >{{ $errors->first('storage_unit') }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2">
+                                            Validity
+                                            <span class="text-danger text-center p-1">*</span> 
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <input class="form-control" name="vailidity_quantity" placeholder="Validity Quantity (number)" maxlength="2" autocomplete="off" value="{{ old('vailidity_quantity') }}" />
+                                                    <div class="text-danger p-1" >{{ $errors->first('vailidity_quantity') }}</div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select name="validity_unit" class="form-control">
+                                                        <option value="days">Days</option>
+                                                        <option value="months">Months</option>
+                                                        <option value="years">Years</option>
+                                                    </select>
+                                                    <div class="text-danger p-1" >{{ $errors->first('validity_unit') }}</div>
                                                 </div>
                                             </div>
                                         </div>
