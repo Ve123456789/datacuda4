@@ -651,8 +651,8 @@
 					<tbody>
 					<tr v-if="currentSubscription">
 						<td>{{ currentSubscription.created_at | formatDateTime }}</td>
-						<td>True</td>
-						<td>${{ currentSubscription.plan.amount }}</td>
+						<td>{{ currentSubscription.status ? 'True' : 'False' }}</td>
+						<td>${{ currentSubscription.amount }}</td>
 					</tr>
 
 					</tbody>

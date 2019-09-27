@@ -112,19 +112,21 @@ class SubscriptionController extends Controller
     }    
 
     public function getCurrentSubscriptionPlan (Request $request) {
-        $plan = $request->user()->subscriptions()->latest()->select(['plan_id', 'created_at'])->with(['plan' => function ($plan) {
-            return $plan->select(['id', 'name', 'amount']);
+        $plan = $request->user()->subscriptions()->latest()->select(['plan_id', 'created_at', 'amount', 'expire_at', 'status'])->with(['plan' => function ($plan) {
+            return $plan->select(['id', 'name']);
         }])->first();
 
         return response()->json(['status' => 200, 'message'=> 'Subscription information found', 'data' => $plan]);
     }
 
     public function cancelSubscription (Request $request) {
-        if ($plan = $request->user()->subscriptions()->latest()->first()) {
-            $plan->delete();
-            return response()->json(['status' => 200, 'message'=> 'Subscription plan has been cancelled', 'data' => []]);
+        $plan = $request->user()->subscriptions()->where('status', true)->latest()->first();
+
+        if (!$plan) {
+            return response()->json(['status' => 208, 'message'=> 'You have already cancelled your subscription plan.', 'data' => []]);
         }
 
-        return response()->json(['status' => 200, 'message'=> 'Subscription plan has been cancelled', 'data' => []]);
+        $plan->update(['status' => false]);
+        return response()->json(['status' => 200, 'message'=> 'Subscription plan has been cancelled.', 'data' => []]);
     }
 }
