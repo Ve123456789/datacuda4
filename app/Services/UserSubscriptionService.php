@@ -6,6 +6,7 @@ use App\Repositories\UserSubscription\IUserSubscriptionRepository as Repository;
 
 use App\Models\Plan;
 use App\User;
+use App\Models\UserSubscription;
 
 class UserSubscriptionService {
     private $repository;
@@ -21,7 +22,7 @@ class UserSubscriptionService {
         if ($this->checkAdditional ($plan)) {
             $activePlan = $this->getLastActivePlan ($user);
 
-            if ($activePlan && $this-> checkPlanValid($activePlan)) {
+            if ($activePlan && $this->checkPlanValid($activePlan)) {
                 return $activePlan->update ([
                     'storage_quantity' => $activePlan->storage_quantity + $this->castMemoryInBytes ($plan),
                 ]);
@@ -59,10 +60,10 @@ class UserSubscriptionService {
     }
 
     private function castMemoryInBytes (Plan $plan):int {
-        return memoryConverterToBytes ($plan->vailidity_quantity, $plan->storage_unit);
+        return memoryConverterToBytes ($plan->storage_quantity, $plan->storage_unit);
     }
 
-    private function checkPlanValid (Plan $activePlan):bool {
+    private function checkPlanValid (UserSubscription $activePlan):bool {
         return $activePlan->expire_at ? strtotime ($activePlan->expire_at) > time() : true;
     }
 
@@ -71,6 +72,6 @@ class UserSubscriptionService {
     }
 
     private function getLastActivePlan (User $user) {
-        return $user->subscriptions()->where('status')->latest()->first();
+        return $user->subscriptions()->where('status', true)->latest()->first();
     }
 }
