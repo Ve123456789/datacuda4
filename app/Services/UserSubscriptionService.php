@@ -28,7 +28,7 @@ class UserSubscriptionService {
             }
         }
 
-        $this->repository->create ([
+        return $this->repository->create ([
             'user_id' => $user->id, 
             'plan_id' => $plan->id,
             'storage_quantity' => $this->castMemoryInBytes ($plan),
@@ -71,6 +71,6 @@ class UserSubscriptionService {
     }
 
     private function getLastActivePlan (User $user) {
-        return $user->subscriptions()->latest()->first();
+        return $user->subscriptions()->where('status')->latest()->first();
     }
 }

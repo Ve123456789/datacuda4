@@ -21,6 +21,10 @@ class UserSubscription extends Model
         return $this->belongsTo (Plan::class, 'plan_id');
     }
 
+    public function additional () {
+        return $this->hasMany (ExtendedSubscriptions::class, 'user_subscription_id');
+    }
+
     /**
      * The model's default values for attributes.
      *

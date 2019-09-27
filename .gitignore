@@ -16,3 +16,4 @@ datacuda.sql
 package-lock.json
 composer.lock
 .git-credentials
+/public/uploads

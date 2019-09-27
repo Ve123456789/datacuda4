@@ -68,14 +68,19 @@ class FilesController extends Controller
         $project_id = key_encryption($request->project_id, 'd');
         if(!empty($request->file())) {
             $plan = $request->user()->subscriptions()->latest()->first();
-            $plan = $plan? $plan->plan()->first(): null;
+
             $volume = (int) (new ProjectController)->get_user_project($request)->getData()->project_size_in_byte;
+
             foreach ($request->file()['file'] as $key => $image) {
                 $volume += (int) (current ($image))->getSize();
             }
            
-            if ($volume > memoryConverterToBytes ($plan ? $plan->storage_quantity : 0, $plan ? $plan->storage_unit : "mb")) {
-                return response()->json(['code' => 102, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory. Please upgrade your plan.', 'error' => 'failed']);
+            if ($volume > $plan->storage_quantity) {
+                return response()->json(['code' => 406, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory. Please upgrade your plan.', 'error' => 'failed']);
+            }
+
+            if ($plan->expire_at && strtotime($plan->expire_at) > time()) {
+                return response()->json(['code' => 406, 'token' => request('auth_token'), 'message' => 'Your current plan has been expired. Please upgrade your plan.', 'error' => 'failed']);
             }
 
             $amount = $request->imgamount;
