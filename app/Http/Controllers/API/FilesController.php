@@ -57,8 +57,7 @@ class FilesController extends Controller
         return response()->json(['status' => 200, 'token' => request('auth_token'), 'message' => 'User file uploaded', 'success' => 'success']);
     }
 
-    public function project_multiple_file(Request $request)
-    {   
+    public function project_multiple_file(Request $request){   
         if($request->img_360){
             $img_360 = '1';
         }else{

@@ -10,7 +10,7 @@
                         <b-dropdown  text="">
                             <b-dropdown-item v-on:click="model_show_edit_project(project.id,project.name)" >Edit</b-dropdown-item>
                             <!-- <b-dropdown-item v-on:click="model_show(project.id)">Share Album</b-dropdown-item> -->
-                            <b-dropdown-item v-on:click="copy_project(project.id)" >Duplicate Album</b-dropdown-item>
+                            <b-dropdown-item v-on:click="showCopy(project.id)" >Duplicate Album</b-dropdown-item>
                             <b-dropdown-item v-on:click="delete_project(project.id)">Delete</b-dropdown-item>
                             <b-dropdown-item v-on:click="download_project(project.id)">Download</b-dropdown-item>
                         </b-dropdown>
@@ -96,7 +96,33 @@
             </div>
             </div>
         </modal>
+        <modal name="create_project_copy" height="auto" :scrollable="true" draggable=".window-header">
+            <div class="window-header">
+            <div class="form_content_box">
+                <!-- <div class="form_logo"><img src="../../../img/datacuda.png"></div> -->
+                <flash-message class="myCustomClass"></flash-message>
+                <button type="button" class="close" aria-label="Close"  v-on:click="hideCopy"> &times; </button>
 
+                <h2>Create New Project</h2>
+                <div class="form-group">
+                    <input type="text" name = "project_name_copy" class="form_cus form-control" id="project_name_copy" placeholder="Enter your project name" v-model="project_name_copy" v-validate="'required'">
+                    <div v-if="errors.has('project_name_copy')" class="error" >
+                        {{ errors.first('project_name_copy') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn green_btn btn-block mb-3" v-on:click="createProjectCopy">CREATE PROJECT</button>
+                    <p class="text-center mb-0"> 
+                        <router-link to="/profile/plan">
+                            <a class="prime-color">Upgrade</a>
+                        </router-link>
+                        to access more features
+                    </p>
+                    <p class="text-center">Compare our  <router-link to="/profile/plan"> <a  class="prime-color">Features.</a> </router-link> </p>
+                </div>
+            </div>
+            </div>
+        </modal>
     </div>
 </template>
 <script>
@@ -111,6 +137,7 @@
                 project_price:0,
                 project_price_share:0,
                 project_name:'',
+                project_name_copy:''
             }
         },
         props: {
@@ -217,8 +244,41 @@
                          this.flash('Project not Deleted', 'error');
                     });
             },
-            copy_project(){
+            showCopy (id) {
+                console.log("copy project id "+id);
+                localStorage.setItem('copy_project_id',id);
+                this.$modal.show('create_project_copy');
+            },
+            hideCopy () {
+                this.$modal.hide('create_project_copy');
+            },
+            createProjectCopy(){
+                let project_id = localStorage.getItem('copy_project_id');
+                console.log(project_id,this.project_name_copy);
+                let data = {
+                    project_name: this.project_name_copy,
+                    project_id:project_id
+                };
 
+                axios
+                    .post("/api/create_project_copy", data)
+                    .then(( response ) => {
+                        console.log(response); 
+                        if(response.data.status == 201 ){
+                            this.flash(response.data.message, "success");
+                            this.$router.push('/project/'+ response.data.project_id);
+                        }else{
+                           
+                            this.flash(response.data.error[0], "error");
+                        }
+                        
+                    })
+                    .catch(({ data }) => {
+                        this.flash(data.data.message, "success");
+                        
+                    });
+                this.$modal.hide('create_project_copy');
+                //this.getUserProjects();
             },
             download_project(id){
                 var id = id;

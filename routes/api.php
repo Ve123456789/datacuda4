@@ -74,6 +74,7 @@ Route::middleware('auth:api')->group(function (){
 	Route::post('/banking_profile', 'API\UserController@banking_profile');
     Route::post('/paymentWithdraw','API\UserController@paymentWithdraw');
     Route::post('/create_project', 'API\ProjectController@create_project');
+    Route::post('/create_project_copy', 'API\ProjectController@create_project_copy');
     Route::post('/update_project', 'API\ProjectController@update_project');
     Route::get('/get_user_files', 'API\UserController@getuserfiles');
     Route::get('/get_project', 'API\ProjectController@get_project');
