@@ -32,7 +32,9 @@ class PlanRequestPut extends FormRequest
             'commission' => 'bail|required|numeric|min:0|max:100',
             'amount' => 'bail|required|numeric',
             'active' => 'bail|nullable',
-            'additional_plan_id' => 'bail|required_if:additional,on|exists:plans'
+            'additional_plan_id' => 'bail|required_if:additional,on|exists:plans',
+            'vailidity_quantity' => 'bail|required|integer',
+            'validity_unit' => 'bail|required|in:days,months,years',
         ];
     }
 

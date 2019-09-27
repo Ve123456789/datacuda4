@@ -31,7 +31,9 @@ class PlanRequestPost extends FormRequest
             'benifits' => 'bail|required|string|max:2000',
             'commission' => 'bail|required|numeric|min:0|max:100',
             'amount' => 'bail|required|numeric',
-            'additional_plan_id' => 'bail|nullable|required_if:additional,on|exists:plans,id'
+            'additional_plan_id' => 'bail|nullable|required_if:additional,on|exists:plans,id',
+            'vailidity_quantity' => 'bail|required|integer',
+            'validity_unit' => 'bail|required|in:days,months,years',
         ];
     }
 
