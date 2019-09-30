@@ -69,6 +69,10 @@ class FilesController extends Controller
         if(!empty($request->file())) {
             $plan = $request->user()->subscriptions()->latest()->first();
 
+            if (!$plan) {
+                return response()->json(['code' => 422, 'token' => request('auth_token'), 'message' => 'Please purchase a Subscription Plan.', 'error' => 'failed']);
+            }
+
             $volume = (int) (new ProjectController)->get_user_project($request)->getData()->project_size_in_byte;
 
             foreach ($request->file()['file'] as $key => $image) {
@@ -79,7 +83,7 @@ class FilesController extends Controller
                 return response()->json(['code' => 406, 'token' => request('auth_token'), 'message' => 'Unsufficient Memory. Please upgrade your plan.', 'error' => 'failed']);
             }
 
-            if ($plan->expire_at && strtotime($plan->expire_at) > time()) {
+            if ($plan->expire_at && time() > strtotime($plan->expire_at)) {
                 return response()->json(['code' => 406, 'token' => request('auth_token'), 'message' => 'Your current plan has been expired. Please upgrade your plan.', 'error' => 'failed']);
             }
 
