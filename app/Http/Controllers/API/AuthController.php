@@ -326,6 +326,10 @@ class AuthController extends Controller
                 $data = json_decode($response->getContent());
                 // Format the final response in a desirable format
 
+                if ($plan = Plan::where('amount', 0)->orWhereNull('amount')->first()) {
+                    event(new SubscriptionPurchased($plan, $user));
+                }
+
                 return response()->json([
                     'token' => $data->access_token,
                     'user' => $user,

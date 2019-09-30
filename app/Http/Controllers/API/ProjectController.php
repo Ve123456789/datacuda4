@@ -273,8 +273,8 @@ class ProjectController extends Controller{
 
         $size = [
             'usag' => convertToReadableSize($project_size),
-            'plan'  => reverseMemoryConversion($plan->storage_quantity),
-            'plan_unit'  => reverseMemoryConversionUnit($plan->storage_quantity),
+            'plan'  => reverseMemoryConversion($plan->storage_quantity ?? 0),
+            'plan_unit'  => reverseMemoryConversionUnit($plan->storage_quantity ?? 0),
         ];
         return response()->json(['status' => 201, 'message' => 'Project created successfully', 'UserProjects' => $ProjectData,'usagedata'=>$size, 'project_size_in_byte' => $project_size]);
     }
