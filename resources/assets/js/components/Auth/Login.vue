@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-4">
+            <div class="col-md-4">
                 <div class="form_content_box">
                     <div class="form_logo"><img src="../../../img/datacuda.png"></div>
                     <flash-message class="myCustomClass"></flash-message>

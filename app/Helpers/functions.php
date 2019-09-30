@@ -234,7 +234,7 @@ function memoryConverterToBytes (int $quantity, string $unit):int {
             return $quantity * 1073741824;
         case 'MB':
             return $quantity * 1048576;
-    }
+    } 
 
 }
 

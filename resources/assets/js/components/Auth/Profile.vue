@@ -278,14 +278,14 @@
 			<div class="account_wrapper white_bg clearfix">
 				<div class="row">
 					<div class="col-md-4">
-						<span v-if="live_data.payouts_enabled" style="color:green" > Payouts Enabled </span>
+						<span v-if="live_data && live_data.payouts_enabled" style="color:green" > Payouts Enabled </span>
 						<span v-else style="color:red" > Payouts Disabled </span>
 					</div>
 					<div class="col-md-4">
-						<span v-if="live_data.charges_enabled" style="color:green" > Charges Enabled </span>	
+						<span v-if="live_data && live_data.charges_enabled" style="color:green" > Charges Enabled </span>	
 						<span v-else style="color:red" > Charges Disabled </span>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4" v-if="live_data " > 
 						<span v-if="live_data.currently_due == 0" style="color:green" > Account Varified </span>
 						<span v-else style="color:red" > 
 							{{ live_data.currently_due[0] }}
