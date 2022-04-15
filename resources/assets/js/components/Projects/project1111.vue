@@ -269,6 +269,7 @@
                                                     <p class="mb-0">Invoice item</p>
                                                 </div>
                                                 <div class="form-group col-md-6">
+                                                    
                                                     <input type="text" name="Description" placeholder="Description"
                                                         class="form-control invoice_des" value="Project Amount" readonly
                                                         v-validate="'required'">

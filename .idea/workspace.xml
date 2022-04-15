@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ddb0dbd1-3299-4c5a-9249-cc98d3b59f28" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/app/Helpers/appHelper.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/appHelper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/NoticealertController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/NoticealertController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/ProjectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/ProjectController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/SubscriptionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/SubscriptionController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/API/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/API/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/assets/js/components/Auth/Profile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/assets/js/components/Auth/Profile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/assets/js/components/Projects/ShareProject.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/assets/js/components/Projects/ShareProject.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/assets/js/components/Projects/project.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/assets/js/components/Projects/project.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/assets/js/components/Reusable/ProjectFiles.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/assets/js/components/Reusable/ProjectFiles.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/assets/js/components/Reusable/UserProjectFiles.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/assets/js/components/Reusable/UserProjectFiles.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/assets/js/components/Storage/StorageView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/assets/js/components/Storage/StorageView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/assets/js/components/Storage/storage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/assets/js/components/Storage/storage.vue" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1TVnaurEGJfr1YVoKu6O0TA4Mpp" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ddb0dbd1-3299-4c5a-9249-cc98d3b59f28" name="Default Changelist" comment="" />
+      <created>1573554196924</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1573554196924</updated>
+      <workItem from="1573554205220" duration="60000" />
+    </task>
+    <servers />
+  </component>
+</project>

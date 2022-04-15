@@ -15,12 +15,19 @@ class StripeLib {
         Stripe::setApiKey($token);
     }
 
+ 
     public function charge (float $amount, array $data) {
-        return Charge::create([
-            "amount" => $amount * 100,
-            "currency" => "usd",
-            "source" => $data['id'], // obtained with Stripe.js
-            //"description" => "Charge for jenny.rosen@example.com"
-          ]);
+    if(isset($data['firstName'])){
+    $description = "Charge from ".$data['firstName']." ".$data['lastName'];
+    } else{
+    $description = "Charge from Datacuda";
+    } return Charge::create([
+    "amount" => $amount * 100,
+    "currency" => "usd",
+    "source" => $data['id'], // obtained with Stripe.js
+    "description" => $description,
+    ]);
     }
+    
+    
 }

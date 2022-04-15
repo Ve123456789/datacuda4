@@ -65,7 +65,7 @@
                     <div class="col-md-12 col-lg-3">
                         <aside class="side_bar">
                             <div class="project_profile">
-                                <span v-if="medias[0]">
+                                <span v-if="medias[0] && (medias[0].ext =='jpg' || medias[0].ext == 'png' || medias[0].ext=='jpeg' || medias[0].ext =='JPG' || medias[0].ext == 'PNG' || medias[0].ext=='JPEG')">
                                     <img v-bind:src="image_path+'medium/'+ medias[0].filename"
                                         v-img:name class="project_profile_img" width="100%">
                                 </span>
@@ -311,6 +311,7 @@
                                                     <span></span>
                                                     <p class="mb-0">Invoice item</p>
                                                 </div>
+                                
                                                 <div class="form-group col-md-6" v-if="invoice_display" >
                                                     <input type="text" name="Description" placeholder="Description"
                                                         class="form-control invoice_des1 font-weight-bold no-border" value="Project Amount" 
@@ -325,13 +326,11 @@
                                                     <span class="error" v-if="errors.has('Amount')">{{errors.first('Amount')}}</span>
                                                 </div>
                                                 <div class="form-group col-md-3" v-if="invoice_display" >
-
                                                     <select name="AmountType" class="form-control invoice_amount_type1"
                                                         v-validate="'required'">
                                                         <option value="USD" selected>USD</option>
                                                     </select>
-                                                    <span class="error"
-                                                        v-if="errors.has('Amount Type')">{{errors.first('Amount Type')}}</span>
+                                                    <span class="error" v-if="errors.has('Amount Type')">{{errors.first('Amount Type')}}</span>
                                                 </div>
 
                                                 <div class="col-md-12" >
@@ -349,9 +348,10 @@
                                                             </div>
                                                             <div class="col-md-3 col-sm-3 input_type_date form-group">
                                                                 <input type="number" :name="'Amount '+ k"
-                                                                    placeholder="320.00"
+                                                                    placeholder=""
                                                                     class="form-control invoice_amount"
-                                                                    v-validate="'required'" :value='amount1[k]' >
+                                                                    v-validate="'required'"
+                                                                    v-model="amount1[k]"  >
                                                                 <span class="error"
                                                                     v-if="errors.has('Amount '+k)">{{errors.first('Amount '+k)}}
                                                                     
@@ -408,6 +408,7 @@
                                                                 </select>
                                                                 <span class="error"
                                                                     v-if="errors.has('Amount Type '+add_invoice_val)">{{errors.first('Amount Type '+add_invoice_val)}}</span>
+                                                                    
                                                             </div>
                                                             <div class="col-md-1 col-sm-1 input_type_currency form-group"
                                                                 v-if="add_invoice_val === add_invoice_loop">
@@ -471,7 +472,7 @@
                                                 <div class="col-md-4">
                                                     <div class="client-info-heading col-md-12 mb-3">
                                                         <span></span>
-                                                        <p class="mb-0  bg-green">Password protect</p>
+                                                        <p class="mb-0  bg-green">Pard protect</p>
                                                     </div>
                                                 <div class="buttons__form_group">
                                                     <div class="form-group">
@@ -508,7 +509,10 @@
                                                     </div>
                                                     <div class="form-group col-md-12">
                                                         <input type="password" class="form-control" placeholder="Password"
-                                                            v-model="set_password" autocomplete="off" required  v-if="passwordProtect" >
+                                                            v-model="set_password" autocomplete="off"  v-if="passwordProtect" v-validate="'required'" name="Password" >
+
+                                                            <span class="error" v-if="errors.has('Password')">{{errors.first('Password')}}</span>
+                                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -583,7 +587,7 @@
                                     
                                     <ul class="form_btn_list">
                                         <li><a href="javascript:void(0)" v-on:click="tabs(3)"
-                                                class="client-info-back">Preview</a></li>
+                                                class="client-info-back">Back</a></li>
                                         <li><a href="javascript:void(0)" v-on:click="project_send()">Send</a></li>
                                     </ul>
                                 </form>
@@ -620,9 +624,9 @@
                                 <button type="button" class="btn mt-3 green_btn" v-on:click="copyLinkData" >
                                     <span aria-hidden="true">Copy Link</span>
                                 </button>
-                                <!-- <div class="mt-3 pass">
+                                <div class="mt-3 pass" v-if="password_protect == 1" >
                                     <p><span class="pr-2 ">Password</span> {{ link_password }}</p> 
-                                </div> -->
+                                </div>
                             </div>
                             
                         </div>
@@ -988,6 +992,7 @@
                             this.loading = 0;
                             //window.Event.fire('reload_files'); // Tell AttachmentList component to refresh its list
                         } else {
+                            this.file = [];
                             this.loading = 0;
                             this.flash(response.data.message, 'error');
                         }
@@ -1048,6 +1053,7 @@
                         this.$validator.validate('Description');
                         this.$validator.validate('Amount');
 
+                       
                         var i = '';
                         for (i = 2; i <= this.add_invoice_loop; i++) {
                             //console.log(i);
@@ -1079,7 +1085,7 @@
                         // }
                         
                         if(user_amount > 0 && user_amount1 != user_amount){
-                            cust_valid = false;
+                            cust_valid = true;
                             this.custom_valid_msg = "Total amount should be equal to project amount $"+user_amount1;
                             
                         }else{
@@ -1191,6 +1197,23 @@
                 }
             },
             project_send() {
+
+                if(this.password_protect == 1){
+                    this.$validator.validate('Password').then(() => {
+                        if (this.errors.any() ) {
+                            return;
+                        }else{
+                            if (!this.errors.any()) {
+                                this.project_send_data();
+                            }
+                        }
+                    });
+                }else{
+                     this.project_send_data();
+                }
+  
+            },
+            project_send_data(){
                 let data = {
                     id: this.project_data.id,
                     fist_name: this.fist_name,

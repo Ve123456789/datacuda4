@@ -23,15 +23,48 @@
 					<div class="d_column">
 						<div class="d_add_new">
 							<div class="d_add_content">
-								<input type="file" multiple="multiple" id="file" @change="uploadFieldChange">
+							<!--	<input type="file" multiple="multiple" id="file" @change="uploadFieldChange">-->
+                             <input type="file" id="file" ref="files" multiple v-on:change="uploadFieldChange"/>
 								<label class="btn_browse" for="file"><img v-bind:src="'/assets/img/plus.png'"> <div class="d_add_text">Add New Image</div></label>
 							</div>
 						</div>
 					</div>
-					<NewFileUpload v-for="media in medias" :media="media" :key="media.id"/>
+                   
+                      <ProjectFiles v-for="media in medias" :media="media" :key="media.id"></ProjectFiles>
+                        <div class="col-md-3 detailList"  v-for="(attachment, index) in file">
+                            <div class="thumbnail thumbnailSecNotUploaded">
+
+                                <div class="imgThumb">
+                                    <img v-bind:ref="'image'+parseInt( index )" class="img-rounded" width="100%">
+                                </div>
+                                <div class="caption">
+                                    <p class="proName">
+                                        <!--<span class="proDate">12/08/2017</span>-->
+                                        {{ attachment.name.substring(0,10) + '...' }}
+                                    </p>
+                                    <p class="listBott">
+                                        <span class="fileSize">{{ Number((attachment.size / 1024 / 1024).toFixed(1)) }}  <span>mb</span> </span>
+                                        <span class="fileRename"><i class="fa fa-trash-o" aria-hidden="true" @click="removeAttachment(attachment)"></i></span>
+                                    </p>
+                                    <!--<p class="payment"><span class="amt">$ <input type="number" :id="'image_amount_e'+media.id" :value="media.amount" readonly="readonly" v-on:focusout="amout_edit(media.id,media.amount)"></span></p>-->
+                                </div>
+
+                            </div>
+                        </div>
+                   
+
+    			<!--	<NewFileUpload v-for="media in medias" :media="media" :key="media.id"/>-->
+                                                              <!--<div class="force-overflow">-->
+
+                                                    </div>
+
+	
 				</div>
-			</div>
+			<!--</div>-->
 		</section>
+\
+ 
+
 	</section>
 </template>
 <script>
@@ -129,6 +162,7 @@
                         let reader = new FileReader();
                         reader.addEventListener("load", function(){
                             this.$refs['image'+parseInt( i )][0].src = reader.result;
+                           // this.$refs['image'+parseInt( i )].src = reader.result;
                         }.bind(this), false);
                         reader.readAsDataURL( this.file[i] )
                     }
@@ -149,8 +183,9 @@
                 this.fileInput.file = null
 
             },
-            uploadFieldChange(e) {
-                var files = e.target.files || e.dataTransfer.files;
+            uploadFieldChange() {
+               // var files = e.target.files || e.dataTransfer.files;
+                let files = this.$refs.files.files;
                 if (!files.length)
                     return;
                 for (var i = files.length - 1; i >= 0; i--) {
@@ -234,5 +269,4 @@
 		right: 0;
 	}
 </style>
-
 

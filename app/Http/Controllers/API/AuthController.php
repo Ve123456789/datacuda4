@@ -16,11 +16,14 @@ use Illuminate\Support\Facades\Storage;
 use PharIo\Manifest\Email;
 use Validator;
 use App\Purchase;
-use Illuminate\Support\Facades\Mail;
-
+//use Illuminate\Support\Facades\Mail;
+use Mail;
 use ZanySoft\Zip\Zip;
 use ZipArchive;
 use File;
+use Auth;
+
+
 
 use App\Http\Requests\PaySubscriptionPlanPost;
 use App\Models\Plan;
@@ -141,7 +144,7 @@ class AuthController extends Controller
         //     ], 422);
         // }
 
-        // Send an internal API request to get an access token
+       
         $data = [
             'grant_type' => 'password',
             'client_id' => $client->id,
@@ -256,7 +259,8 @@ class AuthController extends Controller
             DB::table('company_profile')->insert(["user_id"=>$user->id]);
             $mail_details = [
                 'email_id' =>$data['email'],
-                'from_id' => 'info@datatcuda.com',
+                // 'from_id' => 'info@datatcuda.com',
+                'from_id'=> 'virtualemployee1992@gmail.com',
                 'subject' => 'Welcome to Datacuda.',
                 'view' => 'mail_template/register_mail',
                 'data' => array('link'=>$verification_link,'username'=>request('name')),
@@ -321,7 +325,7 @@ class AuthController extends Controller
                 $user['user_profile']       = $user->user_profile;
                 $user['company_profile']    = $user->company_profile;
                 // Get the data from the response
-                //dd($user);
+                // dd($user);
 
                 $data = json_decode($response->getContent());
                 // Format the final response in a desirable format
@@ -455,6 +459,12 @@ class AuthController extends Controller
             'view' => 'mail_template/forgetpass_mail',
             'data' => array('user'=>$user,'link'=>$reset_link),
         ];
+        // $data = array('name'=>"Virat Gandhi");
+        // Mail::send('mail', $data, function($message) {
+        //      $message->to("thesuite1@yopmail.com", 'Test new mail')->subject
+        //         ('Laravel HTML Testing Mail');
+        //      $message->from('virtualemployee1992@gmail.com','virtual emp');
+        // });
         if (!send_mail($mail_details)) {
             return response()->json([
                 'message' => 'Some Think Wrong',
@@ -524,8 +534,44 @@ class AuthController extends Controller
     //       //"description" => "Charge for jenny.rosen@example.com"
     //     ]);
     // }
-
+    
     public function planpay(PaySubscriptionPlanPost $request)
+    {
+    $plan = Plan::findOrFail($request->subscriptionPlanId); // check if amount exists
+    if ($plan->amount) {
+    if($plan->amount > 0){
+    $per = (10/100)*$plan->amount;
+    $totalAmount = $per+$plan->amount;
+    } else {
+    $totalAmount = $plan->amount;
+    }
+
+    $dataArray['id'] = $request->token['id'];//$request->token;
+    $dataArray['firstName'] = $request->userDetails['firstName'];
+    $dataArray['lastName'] = $request->userDetails['lastName'];
+    $this->stripe->charge($totalAmount, $dataArray);
+    //$this->stripe->charge($totalAmount, $request->token);
+    //$this->stripe->charge($plan->amount, $request->token);
+    } event(new SubscriptionPurchased($plan, $request->user()));
+    // Send notification
+    $notoclear_data = array(
+    "title"=>"Great News! You’ve been paid!",
+    "message"=> Auth::user()->email." has paid you for their plans-".$plan->name,
+    "created_at"=>date("Y-m-d H:i:s"),
+    );
+    $noticealerts_id = DB::table('noticealerts')->insertGetId($notoclear_data);
+    $notoclear_relation = array(
+    "user_id"=> Auth::user()->id,
+    "noticealert_id"=>$noticealerts_id,
+    "status"=>'1',
+    );
+    DB::table('user_noticealerts')->insert($notoclear_relation); return response()->json(['status' => 201, 'message' => 'User Pay successfully']);
+    }
+    
+
+    
+
+    public function planpay_old(PaySubscriptionPlanPost $request)
     {
         $plan = Plan::findOrFail($request->subscriptionPlanId);
 

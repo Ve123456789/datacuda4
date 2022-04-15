@@ -2,7 +2,7 @@
     <div class="col-md-6 detailList">
         	<!-- <flash-message class="myCustomClass"></flash-message> -->
         <div class="thumbnail thumbnailSec">
-            <div   v-if="media.ext === 'jpg' || media.ext === 'png' || media.ext === 'gif' || media.ext === 'jpeg'">
+            <div   v-if="media.ext === 'jpg' || media.ext === 'png' || media.ext === 'gif' || media.ext === 'jpeg' || media.ext === 'JPG' || media.ext === 'JPEG'" >
                 <div class="imgThumb">
                     <img v-bind:src="image_path+'thumb/' + media.filename" v-img:name class="img-rounded" width="100%">
                 </div>
@@ -36,7 +36,7 @@
                 </div>
 
             </div>
-            <div class="onlyText" v-else>
+            <div class="onlyText" v-else-if="media.ext === 'pdf' " >
                 <a v-bind:href="'storage/user_files/' + media.filename">
                     <img v-bind:src="'/assets/img/pdf_icon.png'" class="img-roundedss" width="100%" height="50%">
                 </a>

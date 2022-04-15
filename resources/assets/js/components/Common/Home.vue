@@ -267,7 +267,7 @@ export default {
         },
 
         secondSection(){
-            console.log("pravin kumar 3");
+            
             axios
             .get('/api/homesecondsection')
             .then(result =>{

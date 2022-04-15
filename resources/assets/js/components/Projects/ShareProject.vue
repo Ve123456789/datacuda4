@@ -14,21 +14,16 @@
                 <li><a href="javascript:void(0)" v-on:click="download_project(project_data.id)"
                     v-if="payed === 1">Download</a></li>
                 <li><span class="money_text"><b>$
-                      <!--{{ totalAmount(project_data.medias) }}-->{{project_data.share_data.buy_amount}} </b></span>
+                      <!--{{ totalAmount(project_data.medias) }}-->{{ project_data.share_data.buy_amount }} </b></span>
                 </li>
-                <li><a href="javascript:void(0)" v-on:click="show_payment()" v-if="payed === 0">Buy now</a></li>
+                <li><a href="javascript:void(0)" v-on:click="show_payment()" v-if="payed === 0" >Buy now</a></li>
               </ul>
             </div>
           </div>
         </div>
       </section>
       <section class="project_client_datat grey_bg">
-        <div class="container">
-          
-          
-
-           
-          
+        <div class="container">         
 
             <div class="row clearfix" v-if="share_data.watermark_preview != '1'" >
               
@@ -102,6 +97,14 @@
 
 
               </div>
+
+              <div class="project__data"  v-else-if="img_data.ext === 'pdf' "  >
+              
+                    <img v-bind:src="'/assets/img/pdf_icon.png'" class="img-roundedss" width="100%" height="100%">                
+              </div>
+
+
+
             </div>
 
 

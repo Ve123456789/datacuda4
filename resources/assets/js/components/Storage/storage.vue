@@ -31,6 +31,7 @@
 								</form>
 							</li>
 							<li><a href="javascript:void(0)" @click="show" :style="{'text-transform':'none'}" >Create Folder </a></li>
+							<li><router-link to="/dashboard" :style="{'text-transform':'none'}"> Done </router-link></li>
 						</ul>
 					</div>
 				</div>

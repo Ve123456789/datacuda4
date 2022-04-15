@@ -120,7 +120,8 @@ class SubscriptionController extends Controller
     }
 
     public function cancelSubscription (Request $request) {
-        $plan = $request->user()->subscriptions()->where('status', true)->latest()->first();
+        $userData = Auth::user();
+        $plan = $request->user()->subscriptions()->where('status', true)->where('user_id',$userData->id)->latest()->first();
 
         if (!$plan) {
             return response()->json(['status' => 208, 'message'=> 'You have already cancelled your subscription plan.', 'data' => []]);

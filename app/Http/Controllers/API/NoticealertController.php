@@ -39,7 +39,7 @@ class NoticealertController extends Controller
     public function getListOfNotice()
     {
         $user = Auth::user();
-        $noticesList = UserNoticealert::with('noticealerts')->where('user_id',Auth::user()->id)->where('status',1)->get();
+        $noticesList = UserNoticealert::with('noticealerts')->where('user_id',Auth::user()->id)->where('status',1)->orderBy('id','DESC')->get();
         return response()->json(['status' => 200, 'token' => request('auth_token'), 'message' => 'Success', 'data' => $noticesList]);
     }
 

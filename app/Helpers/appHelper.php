@@ -3,7 +3,10 @@ use App\Models\Media;
 use App\Models\Setting;
 use App\Models\Menu;
 use App\Models\MenuLink;
+//use Barryvdh\DomPDF\Facade as PDF; 
+use Ilovepdf\WatermarkTask;
 
+ini_set('max_execution_time', 0);
 function flash($message, $level = 'info')
 {
     session()->flash('flash_message', $message);
@@ -77,6 +80,7 @@ function helperSaveImage($image, $path,$amount = 0,$img_360='') {
     return $id;
 }
 function helperSaveFile($file, $path, $amount = 0) {
+    
     $file_original_name =  $file->getClientOriginalName();
     $file_name = date('d_m_y_h_i_s').helperSanitizeFilename($file->getClientOriginalName());
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -84,13 +88,36 @@ function helperSaveFile($file, $path, $amount = 0) {
 
     $size = $file->getClientSize();
 
-    $file->storeAs('/'.$path['email'].'/'.$path['project_path'].'/file/', $file_name ,'video_files');
+    $file->storeAs('/'.$path['email'].'/'.$path['project_path'].'/file/', $file_name );
 
-    //$file->move(public_path('uploads/').$file_name);
+    $file->move(public_path('uploads/'),$file_name);
+    //echo public_path('database/'.$path['email'].'/'.$path['project_path'].'/file/'.$file_name); die;
     if($file_ext == 'pdf') {
-        $pdf = PDF::loadFile(public_path('database/'.$path['email'].'/'.$path['project_path'].'/file/'.$file_name),$config = []);
-        $pdf->setWatermarkImage(public_path('/images/white-logo.png'));
-        $pdf->save(public_path('assets/file.pdf'));
+        // //$pdf = PDF::loadFile(public_path('database/'.$path['email'].'/'.$path['project_path'].'/file/'.$file_name),$config = []);
+        // $pdf = PDF::loadFile(public_path('sss.pdf'),$config = []);
+        // print_r( $pdf); die;
+        // $pdf->setWatermarkImage(public_path('/images/white-logo.png'));
+        // $pdf->save(public_path('assets/file.pdf'));
+
+        // to get your key pair, please visit https://developer.ilovepdf.com/user/projects
+        $myTask = new WatermarkTask('project_public_ab3e7b861b8270de6752b27d79242916_S06rL10822b4ff8c00c395f6e0ab8844e8f46','secret_key_6fb8bc85794f3bf1014dc73e243d808e_DBIWoeaa5d8acd86175d16688c064c0942e17');
+
+        // file var keeps info about server file id, name...
+        // it can be used latter to cancel file
+        $file = $myTask->addFile(public_path('uploads/').$file_name);
+
+        // set mode to text
+        $myTask->setMode("text");
+        //$myTask->setMode("image");
+
+        // set the text
+        $myTask->setText("DataCuda");
+        //$myTask->setImage(public_path('/images/white-logo.png'));
+        // process files
+        $myTask->execute();
+
+        // and finally download the unlocked file. If no path is set, it will be downloaded on current folder
+        $myTask->download(public_path('uploads/'));
     }
     $id = DB::table('medias')->insertGetId(
         ['media_type' => 'image',

@@ -200,7 +200,7 @@ class UserController extends Controller
     }
 
     public function user_profile(Request $request){
-
+        
         // validate data coming from front end.
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
@@ -238,6 +238,10 @@ class UserController extends Controller
                 'phone' => request('phone')
             ]);
         }
+        if(!empty(request('password'))){
+            User::where('id', auth()->user()->id)->update(['password'=>bcrypt(request('password'))]);
+        }
+
         /*$user = User::where('id', auth()->user()->id)->first();
         $user['user_profile'] = $user->user_profile;
         $user['company_profile'] = $user->company_profile;*/

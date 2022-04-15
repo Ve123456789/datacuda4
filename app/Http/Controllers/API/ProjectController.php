@@ -203,12 +203,15 @@ class ProjectController extends Controller{
 
             $total_img = 0;
             $total_vid = 0;
+            $total_pdf = 0;
             
             foreach ($media_ids as $key => $value) {
                 $media_count = DB::table('medias')->select('ext')->where('status', 1)->where('id', $value->media_id)->first();
                 if($media_count){
-                    if($media_count->ext == 'jpg' || $media_count->ext == 'png'){
+                    if( $media_count->ext == 'jpg' || $media_count->ext == 'png' || $media_count->ext == 'jpeg' || $media_count->ext == 'gif' || $media_count->ext == 'JPEG' || $media_count->ext == 'PNG' || $media_count->ext == 'JPEG' || $media_count->ext == 'GIF' ){
                         $total_img++;
+                    }elseif($media_count->ext == 'pdf'){
+                        $total_pdf ++;
                     }else{
                         $total_vid++;
                     }
@@ -252,6 +255,7 @@ class ProjectController extends Controller{
                     'project_ShareImage'=>$project_ShareImage,
                     'total_vid'=>$total_vid,
                     'total_img'=>$total_img,
+                    'total_pdf'=>$total_pdf,
                 ];
             else:
                 $ProjectData[] = [
@@ -265,6 +269,7 @@ class ProjectController extends Controller{
                     'project_ShareImage'=>$project_ShareImage,
                     'total_vid'=>$total_vid,
                     'total_img'=>$total_img,
+                    'total_pdf'=>$total_pdf,
                 ];
             endif;
         endforeach;
@@ -711,8 +716,8 @@ class ProjectController extends Controller{
 
 
         $notoclear_data = array(
-            "title"=>" Your files sent",
-            "message"=>"Your file sent to ".$request->email,
+            "title"=>" Your files are sent",
+            "message"=>"Your files are sent to ".$request->email,
             "created_at"=>date("Y-m-d H:i:s"),
         );
 
@@ -840,6 +845,7 @@ class ProjectController extends Controller{
                 "message"=>$share_image_data['email']." has paid you for their files. You received ".number_format($share_image_data['buy_amount'],2),
                 "created_at"=>date("Y-m-d H:i:s"),
             );
+            
 
             $noticealerts_id = DB::table('noticealerts')->insertGetId($notoclear_data);
 
@@ -960,7 +966,7 @@ class ProjectController extends Controller{
         $key = key_encryption($link_dencrypt, 'd');
         $share_image_data = ShareImage::where('recipient_id', $key)->first();
         if ($share_image_data):
-            $st_val = $share_image_data[0]['status'] + 1;
+            $st_val =isset($share_image_data[0]['status'])+ 1;
             ShareImage::where('id', $share_image_data['id'])->update(['status' => $st_val]);
             /*$linked_media_ids = DB::table('media_user_projects')->where('user_projects_id',$share_image_data['project_id'])->pluck('media_id');
             $media_data    = Media::whereIn('id',$linked_media_ids)->get();*/
@@ -1011,7 +1017,7 @@ class ProjectController extends Controller{
                     'status' => 422
                 ], 422);
             }
-            $st_val = $share_image_data[0]['status'] + 1;
+            $st_val = isset($share_image_data[0]['status']) + 1;
             ShareImage::where('id', $share_image_data['id'])->update(['status' => $st_val]);
             return response()->json(['status' => 200,'message' => 'Success', 'status' => 'Have']);
         else:

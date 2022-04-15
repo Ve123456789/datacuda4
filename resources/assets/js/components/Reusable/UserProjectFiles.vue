@@ -19,6 +19,7 @@
                         <div class="project-info">
                             <p>{{ project.total_img }} photos</p>
                             <p>{{ project.total_vid }} video</p>
+                            <p>{{ project.total_pdf }} pdf</p>
                         </div>
                     </div>
                 </div>
@@ -103,7 +104,7 @@
                 <flash-message class="myCustomClass"></flash-message>
                 <button type="button" class="close" aria-label="Close"  v-on:click="hideCopy"> &times; </button>
 
-                <h2>Create New Project</h2>
+                <h2>Duplicate New Project</h2>
                 <div class="form-group">
                     <input type="text" name = "project_name_copy" class="form_cus form-control" id="project_name_copy" placeholder="Enter your project name" v-model="project_name_copy" v-validate="'required'">
                     <div v-if="errors.has('project_name_copy')" class="error" >
@@ -111,7 +112,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn green_btn btn-block mb-3" v-on:click="createProjectCopy">CREATE PROJECT</button>
+                    <button class="btn green_btn btn-block mb-3" v-on:click="createProjectCopy">Duplicate PROJECT</button>
                     <p class="text-center mb-0"> 
                         <router-link to="/profile/plan">
                             <a class="prime-color">Upgrade</a>

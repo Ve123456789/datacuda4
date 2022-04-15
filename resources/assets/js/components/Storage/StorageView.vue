@@ -32,7 +32,7 @@
           <div class="col-md-12 col-lg-3">
             <aside class="side_bar">
               <div class="project_profile">
-                <span v-if="medias[0]">
+                <span v-if="medias[0] && (medias[0].ext =='jpg' || medias[0].ext == 'png' || medias[0].ext=='jpeg' || medias[0].ext =='JPG' || medias[0].ext == 'PNG' || medias[0].ext=='JPEG')">
                   <img
                     v-bind:src="image_path+'medium/'+ medias[0].filename"
                     v-img:name
